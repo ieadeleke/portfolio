@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root {
+  --foreground: #ffffff;
+  --background: #0A0A0A;
+  --font-primary: "Plus Jakarta Sans", sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-primary);
+}
