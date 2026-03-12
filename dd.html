@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThumbCraft — YouTube Thumbnail Creator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FAFAF8;
+            --white: #FFFFFF;
+            --warm: #F4F2ED;
+            --text: #111110;
+            --text-2: #333330;
+            --text-3: #71706B;
+            --text-4: #A3A19C;
+            --accent: #FF3D00;
+            --accent-hover: #E83800;
+            --accent-bg: #FFF1EC;
+            --purple: #7C3AED;
+            --purple-bg: #F4F0FF;
+            --blue: #2563EB;
+            --blue-bg: #EFF6FF;
+            --emerald: #059669;
+            --emerald-bg: #ECFDF5;
+            --amber: #D97706;
+            --amber-bg: #FFFBEB;
+            --rose: #E11D48;
+            --rose-bg: #FFF1F2;
+            --border: #E7E5DF;
+            --border-2: #D5D2CC;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.03);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.03);
+            --shadow-xl: 0 16px 50px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+            --r: 12px;
+            --r-lg: 16px;
+            --r-xl: 20px;
+            --container: 1140px;
+            --heading: "Space Grotesk", system-ui, sans-serif;
+            --body: "DM Sans", system-ui, sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+        body {
+            font-family: var(--body);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: var(--accent); color: #fff; }
+
+        img { display: block; max-width: 100%; }
+        a { color: inherit; }
+
+        .container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+
+        h1, h2, h3, h4 { font-family: var(--heading); }
+        h1 { font-size: clamp(44px, 6.5vw, 72px); font-weight: 700; letter-spacing: -0.035em; line-height: 0.97; }
+        h2 { font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+        h3 { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.3; }
+
+        .accent { color: var(--accent); }
+
+        .label {
+            font-family: var(--heading);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 14px;
+        }
+
+        .subdesc {
+            color: var(--text-3);
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--heading);
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+        .btn svg { width: 16px; height: 16px; transition: transform 0.2s; }
+        .btn:hover svg { transform: translateX(2px); }
+
+        .btn-primary {
+            padding: 12px 22px;
+            background: var(--text);
+            color: #fff;
+            box-shadow: var(--shadow-md);
+        }
+        .btn-primary:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+
+        .btn-accent {
+            padding: 12px 22px;
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(255,61,0,0.18);
+        }
+        .btn-accent:hover { background: var(--accent-hover); box-shadow: 0 4px 14px rgba(255,61,0,0.22); transform: translateY(-1px); }
+
+        .btn-outline {
+            padding: 12px 22px;
+            background: var(--white);
+            color: var(--text);
+            border: 1.5px solid var(--border);
+        }
+        .btn-outline:hover { border-color: var(--border-2); background: var(--warm); transform: translateY(-1px); }
+
+        .btn-lg { padding: 15px 28px; font-size: 15px; border-radius: 12px; }
+
+        /* ===== NAV ===== */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            height: 64px;
+            display: flex; align-items: center;
+            background: transparent;
+            border-bottom: 1px solid transparent;
+            transition: background 0.4s, border-color 0.3s, box-shadow 0.3s;
+        }
+        nav.scrolled {
+            background: rgba(250,250,248,0.92);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-bottom-color: var(--border);
+            box-shadow: 0 1px 8px rgba(0,0,0,0.03);
+        }
+
+        .nav-inner { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+
+        .logo {
+            display: flex; align-items: center; gap: 9px;
+            font-family: var(--heading); font-weight: 700; font-size: 17px;
+            letter-spacing: -0.03em; text-decoration: none; color: #fff;
+        }
+        nav.scrolled .logo { color: var(--text); }
+        .logo-mark {
+            width: 28px; height: 28px; background: rgba(0,0,0,0.2);
+            border-radius: 7px; display: flex; align-items: center; justify-content: center;
+        }
+        nav.scrolled .logo-mark { background: var(--accent); }
+
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+        .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.7); transition: color 0.15s; }
+        .nav-links a:hover { color: #fff; }
+        nav.scrolled .nav-links a { color: var(--text-3); }
+        nav.scrolled .nav-links a:hover { color: var(--text); }
+
+        .nav-right { display: flex; align-items: center; gap: 8px; }
+
+        /* Nav buttons adapt to hero */
+        .nav-btn-login {
+            padding: 8px 14px; font-size: 13px;
+            background: transparent; color: rgba(255,255,255,0.85);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            border-radius: 10px; font-family: var(--heading); font-weight: 600;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .nav-btn-login:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+        nav.scrolled .nav-btn-login { color: var(--text); border-color: var(--border); background: var(--white); }
+        nav.scrolled .nav-btn-login:hover { border-color: var(--border-2); }
+
+        .nav-btn-cta {
+            padding: 8px 16px; font-size: 13px;
+            background: var(--text); color: #fff;
+            border-radius: 10px; font-family: var(--heading); font-weight: 600;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: all 0.2s;
+        }
+        .nav-btn-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
+        .nav-btn-cta svg { width: 14px; height: 14px; }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: var(--accent);
+            padding: 140px 0 0;
+            text-align: center;
+            position: relative;
+            overflow: visible;
+        }
+
+        /* Subtle radial light effect on hero */
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -40%; left: 50%; transform: translateX(-50%);
+            width: 140%; height: 100%;
+            background: radial-gradient(ellipse at center top, rgba(255,255,255,0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            position: relative; z-index: 2;
+            max-width: 720px;
+            margin: 0 auto;
+            padding-bottom: 60px;
+        }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(0,0,0,0.12);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 100px;
+            padding: 5px 16px 5px 10px;
+            font-family: var(--heading);
+            font-size: 13px; font-weight: 500;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 32px;
+            backdrop-filter: blur(8px);
+        }
+
+        .hero-badge-new {
+            padding: 2px 8px;
+            background: var(--text);
+            color: #fff;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .hero h1 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .hero-subtitle {
+            font-size: 17px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.7;
+            max-width: 480px;
+            margin: 0 auto 36px;
+        }
+
+        .hero-actions {
+            display: flex; gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn-dark {
+            padding: 14px 28px;
+            background: var(--text);
+            color: #fff;
+            border-radius: 12px;
+            font-family: var(--heading);
+            font-size: 15px; font-weight: 600;
+            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+        .hero-btn-dark:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+        .hero-btn-dark svg { width: 16px; height: 16px; transition: transform 0.2s; }
+        .hero-btn-dark:hover svg { transform: translateX(2px); }
+
+        .hero-btn-outline {
+            padding: 14px 28px;
+            background: transparent;
+            color: #fff;
+            border: 1.5px solid rgba(255,255,255,0.35);
+            border-radius: 12px;
+            font-family: var(--heading);
+            font-size: 15px; font-weight: 600;
+            text-decoration: none;
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: all 0.2s;
+        }
+        .hero-btn-outline:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+        .hero-btn-outline svg { width: 16px; height: 16px; }
+
+        /* Hero mockup — overlaps into next section */
+        .hero-mockup-wrap {
+            position: relative;
+            z-index: 3;
+            padding: 0 24px;
+            margin-top: 56px;
+            /* Push mockup down so it overlaps into the logos section */
+            margin-bottom: -140px;
+        }
+
+        .hero-mockup {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 16px;
+        }
+
+        .hero-card {
+            background: var(--white);
+            border-radius: var(--r-xl);
+            padding: 28px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        /* Left card — chart */
+        .hc-header {
+            display: flex; align-items: flex-start; justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .hc-title { font-family: var(--heading); font-size: 14px; font-weight: 600; }
+        .hc-select {
+            font-family: var(--heading); font-size: 11px; font-weight: 500;
+            padding: 3px 10px; background: var(--warm); border-radius: 6px;
+            color: var(--text-3); display: flex; align-items: center; gap: 4px;
+        }
+
+        .hc-big-num {
+            font-family: var(--heading); font-size: 36px; font-weight: 700;
+            letter-spacing: -0.03em; color: var(--text); line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .hc-change {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 12px; font-weight: 600; color: var(--accent);
+            margin-bottom: 4px;
+        }
+        .hc-sub { font-size: 11px; color: var(--text-4); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 16px; }
+
+        .hc-bars {
+            display: flex; align-items: flex-end; gap: 12px;
+            height: 80px; margin-bottom: 10px;
+        }
+        .hc-bar-group {
+            flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+        }
+        .hc-bar {
+            width: 100%; border-radius: 4px;
+        }
+        .hc-bar-label { font-size: 11px; color: var(--text-4); }
+
+        /* Right card — insights */
+        .hc-tabs {
+            display: flex; gap: 4px; float: right;
+        }
+        .hc-tab {
+            font-family: var(--heading); font-size: 10px; font-weight: 600;
+            padding: 3px 8px; border-radius: 4px; color: var(--text-4);
+        }
+        .hc-tab.on { background: var(--text); color: #fff; }
+
+        .hc-legend { display: flex; gap: 14px; margin: 8px 0 20px; }
+        .hc-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-3); }
+        .hc-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+        .hc-circles {
+            display: flex; justify-content: space-between; gap: 12px;
+            margin-bottom: 16px;
+        }
+        .hc-circle-item { text-align: center; flex: 1; }
+        .hc-circle {
+            width: 72px; height: 72px; border-radius: 50%;
+            margin: 0 auto 8px;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .hc-circle-outer {
+            position: absolute; inset: 0; border-radius: 50%;
+            border: 4px solid var(--warm);
+        }
+        .hc-circle-val { font-family: var(--heading); font-size: 13px; font-weight: 700; color: var(--accent); position: relative; z-index: 2; }
+        .hc-circle-top { font-family: var(--heading); font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 2px; }
+        .hc-circle-label { font-size: 11px; color: var(--text-4); }
+
+        .hc-goal {
+            text-align: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 12px; color: var(--text-4); text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .hc-goal strong { color: var(--text); }
+
+        /* ===== EDITOR MOCKUP ===== */
+        /* ===== LOGOS ===== */
+        .logos {
+            padding: 180px 0 52px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            z-index: 1;
+        }
+        .logos-label {
+            text-align: center; font-family: var(--heading);
+            font-size: 12px; font-weight: 500; text-transform: uppercase;
+            letter-spacing: 0.08em; color: var(--text-4); margin-bottom: 28px;
+        }
+        .logos-row {
+            display: flex; align-items: center; justify-content: center;
+            gap: 48px; flex-wrap: wrap;
+        }
+        .logos-row span {
+            font-family: var(--heading); font-size: 17px; font-weight: 700;
+            letter-spacing: -0.02em; color: var(--text); opacity: 0.15;
+        }
+
+        /* ===== SECTION SPACING ===== */
+        .sec { padding: 120px 0; }
+        .sec-sm { padding: 80px 0; }
+
+        /* ===== TEMPLATES ===== */
+        .tpl-top {
+            display: flex; align-items: flex-end; justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        .tpl-top-text { max-width: 460px; }
+        .tpl-top-text h2 { margin-bottom: 10px; }
+
+        .tpl-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .tpl {
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            border: 1.5px solid var(--border);
+            background: var(--white);
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+        }
+        .tpl:hover {
+            border-color: var(--border-2);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .tpl-thumb {
+            aspect-ratio: 16/9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tpl-over {
+            position: absolute; inset: 0;
+            background: rgba(17,17,16,0.55);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.25s;
+        }
+        .tpl:hover .tpl-over { opacity: 1; }
+
+        .tpl-use {
+            padding: 9px 22px;
+            background: #fff; color: var(--text);
+            border: none; border-radius: 8px;
+            font-family: var(--heading); font-size: 13px; font-weight: 600;
+            cursor: pointer;
+            transform: translateY(6px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        .tpl:hover .tpl-use { transform: translateY(0); opacity: 1; }
+
+        .tpl-info {
+            padding: 12px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .tpl-name { font-family: var(--heading); font-size: 13px; font-weight: 600; }
+        .tpl-cat { font-size: 12px; color: var(--text-4); }
+        .tpl-tag {
+            font-family: var(--heading); font-size: 10px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.04em;
+            padding: 3px 9px; border-radius: 6px; background: var(--warm); color: var(--text-3);
+        }
+
+        /* ===== FEATURES ===== */
+        .feat-top { text-align: center; max-width: 480px; margin: 0 auto 48px; }
+        .feat-top h2 { margin-bottom: 10px; }
+
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .feat {
+            background: var(--white);
+            border: 1.5px solid var(--border);
+            border-radius: var(--r-lg);
+            padding: 32px 28px;
+            transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+        }
+        .feat:hover {
+            border-color: var(--border-2);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feat-icon {
+            width: 42px; height: 42px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 18px;
+        }
+        .feat-icon svg { width: 20px; height: 20px; }
+        .feat h3 { margin-bottom: 8px; }
+        .feat p { color: var(--text-3); font-size: 14px; line-height: 1.65; }
+
+        /* ===== SPLIT ===== */
+        .split {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 72px; align-items: center;
+        }
+        .split.rev { direction: rtl; }
+        .split.rev > * { direction: ltr; }
+
+        .split-text { max-width: 420px; }
+        .split-text h2 { margin-bottom: 12px; }
+        .split-text > p { color: var(--text-3); font-size: 16px; line-height: 1.75; margin-bottom: 24px; }
+
+        .checks { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .checks li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-2); line-height: 1.5; }
+        .ck {
+            width: 20px; height: 20px; border-radius: 5px;
+            background: var(--emerald-bg);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; margin-top: 2px;
+        }
+        .ck svg { width: 12px; height: 12px; color: var(--emerald); }
+
+        .split-vis {
+            background: var(--white);
+            border: 1.5px solid var(--border);
+            border-radius: var(--r-xl);
+            aspect-ratio: 1;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+            transition: all 0.4s;
+        }
+        .split-vis:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+
+        /* Grid demo */
+        .demo-t {
+            width: 220px; aspect-ratio: 16/9;
+            background: #1e293b; border-radius: 5px;
+            position: relative; z-index: 2; overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        .gl { position: absolute; background: var(--accent); opacity: 0.3; }
+        .gl.h { left: 0; right: 0; height: 1px; }
+        .gl.v { top: 0; bottom: 0; width: 1px; }
+        .sn {
+            width: 6px; height: 6px; background: var(--accent); border-radius: 50%;
+            position: absolute; z-index: 3;
+            animation: sn 2.5s ease-in-out infinite;
+        }
+        @keyframes sn { 0%,100%{transform:scale(1);opacity:.7} 50%{transform:scale(1.5);opacity:.3} }
+
+        /* Brand visual */
+        .bk-vis { display: flex; flex-direction: column; gap: 16px; z-index: 2; width: 210px; }
+        .bk-h { font-family: var(--heading); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-4); margin-bottom: 6px; }
+        .bk-colors { display: flex; gap: 7px; }
+        .bk-c { width: 34px; height: 34px; border-radius: 7px; box-shadow: var(--shadow-sm); }
+        .bk-c:first-child { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .bk-f { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--warm); border: 1px solid var(--border); border-radius: 7px; font-size: 12px; margin-bottom: 4px; }
+        .bk-f strong { font-family: var(--heading); font-weight: 600; }
+        .bk-f span { color: var(--text-4); font-size: 10px; }
+        .bk-drop { width: 100%; height: 44px; border: 1.5px dashed var(--border); border-radius: 7px; display: flex; align-items: center; justify-content: center; gap: 5px; color: var(--text-4); font-size: 11px; }
+
+        /* ===== NUMBERS ===== */
+        .nums { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+        .num {
+            text-align: center; padding: 32px 16px;
+            background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r-lg);
+            transition: all 0.3s;
+        }
+        .num:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .num-v { font-family: var(--heading); font-size: clamp(32px,4vw,44px); font-weight: 700; letter-spacing: -0.04em; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+        .num-l { font-size: 14px; color: var(--text-3); }
+
+        /* ===== REVIEWS ===== */
+        .reviews-bg { background: var(--warm); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .reviews-top { text-align: center; max-width: 400px; margin: 0 auto 48px; }
+        .reviews-top h2 { margin-bottom: 10px; }
+        .reviews-top p { color: var(--text-3); font-size: 16px; }
+
+        .reviews-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+
+        .review {
+            background: var(--white); border: 1.5px solid var(--border);
+            border-radius: var(--r-lg); padding: 28px;
+            transition: all 0.3s;
+        }
+        .review:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--border-2); }
+
+        .stars { display: flex; gap: 2px; margin-bottom: 14px; }
+        .stars svg { width: 14px; height: 14px; fill: var(--amber); color: var(--amber); }
+
+        .review-q { font-size: 14px; line-height: 1.7; color: var(--text-2); margin-bottom: 18px; }
+
+        .review-who { display: flex; align-items: center; gap: 10px; }
+        .review-av {
+            width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--heading); font-size: 13px; font-weight: 700; color: #fff;
+        }
+        .review-name { font-family: var(--heading); font-size: 13px; font-weight: 600; }
+        .review-role { font-size: 11px; color: var(--text-4); }
+
+        /* ===== CTA ===== */
+        .cta-wrap { padding: 0 0 120px; }
+        .cta {
+            background: var(--text); color: #fff;
+            border-radius: var(--r-xl); padding: 72px 48px;
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .cta::before {
+            content: ""; position: absolute;
+            top: -100px; right: -100px;
+            width: 280px; height: 280px; border-radius: 50%;
+            border: 50px solid rgba(255,61,0,0.06);
+        }
+        .cta::after {
+            content: ""; position: absolute;
+            bottom: -60px; left: -60px;
+            width: 180px; height: 180px; border-radius: 50%;
+            border: 36px solid rgba(255,255,255,0.02);
+        }
+        .cta-inner { position: relative; z-index: 2; }
+        .cta-inner .label { color: rgba(255,255,255,0.4); }
+        .cta-inner h2 { color: #fff; margin-bottom: 12px; }
+        .cta-p { color: rgba(255,255,255,0.5); font-size: 16px; max-width: 400px; margin: 0 auto 24px; line-height: 1.7; }
+
+        .cta-perks { display: flex; align-items: center; justify-content: center; gap: 28px; margin-bottom: 36px; flex-wrap: wrap; }
+        .cta-perk { display: flex; align-items: center; gap: 7px; font-size: 14px; color: rgba(255,255,255,0.6); }
+        .cta-perk svg { width: 15px; height: 15px; color: var(--accent); }
+
+        .btn-white {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 15px 30px; background: #fff; color: var(--text);
+            border-radius: 12px; font-family: var(--heading); font-size: 15px; font-weight: 600;
+            text-decoration: none; border: none; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+        }
+        .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .btn-white svg { width: 16px; height: 16px; transition: transform 0.2s; }
+        .btn-white:hover svg { transform: translateX(2px); }
+
+        .cta-note { font-size: 13px; color: rgba(255,255,255,0.3); margin-top: 14px; }
+
+        /* ===== FOOTER ===== */
+        footer { border-top: 1px solid var(--border); padding: 48px 0 28px; background: var(--white); }
+        .ft-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px; margin-bottom: 36px; }
+        .ft-brand p { color: var(--text-3); font-size: 13px; margin-top: 12px; max-width: 240px; line-height: 1.55; }
+        .ft-col h4 { font-family: var(--heading); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 14px; }
+        .ft-col a { display: block; color: var(--text-3); text-decoration: none; font-size: 13px; padding: 3px 0; transition: color 0.15s; }
+        .ft-col a:hover { color: var(--text); }
+        .ft-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-4); }
+        .ft-socials { display: flex; gap: 6px; }
+        .ft-socials a { width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-3); text-decoration: none; transition: all 0.15s; }
+        .ft-socials a:hover { border-color: var(--border-2); color: var(--text); background: var(--warm); }
+        .ft-socials svg { width: 13px; height: 13px; }
+
+        /* ===== REVEAL ===== */
+        .rv { opacity: 0; transform: translateY(24px); transition: all 0.7s cubic-bezier(0.16,1,0.3,1); }
+        .rv.vis { opacity: 1; transform: translateY(0); }
+        .d1{transition-delay:.06s} .d2{transition-delay:.12s} .d3{transition-delay:.18s} .d4{transition-delay:.24s} .d5{transition-delay:.3s}
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width:1024px){
+            .hero-mockup{grid-template-columns:1fr;max-width:520px}
+            .hero-mockup-wrap{margin-bottom:-100px}
+            .logos{padding-top:140px}
+            .tpl-grid{grid-template-columns:repeat(2,1fr)}
+            .feat-grid{grid-template-columns:repeat(2,1fr)}
+            .split,.split.rev{grid-template-columns:1fr;gap:32px;direction:ltr}
+            .split-text{max-width:100%}
+            .reviews-grid{grid-template-columns:repeat(2,1fr)}
+            .reviews-grid .review:last-child{display:none}
+            .ft-grid{grid-template-columns:1fr 1fr}
+        }
+        @media(max-width:768px){
+            .nav-links{display:none}
+            .hero{padding:120px 0 0}
+            .hero-mockup{grid-template-columns:1fr;max-width:400px}
+            .hero-mockup-wrap{margin-bottom:-80px}
+            .logos{padding-top:120px}
+            .hc-big-num{font-size:28px}
+            .hc-circles{flex-direction:column;align-items:center;gap:16px}
+            .tpl-grid,.feat-grid,.reviews-grid{grid-template-columns:1fr}
+            .reviews-grid .review:last-child{display:block}
+            .nums{grid-template-columns:repeat(2,1fr)}
+            .cta{padding:48px 24px}
+            .cta-perks{flex-direction:column;gap:10px}
+            .ft-grid{grid-template-columns:1fr;gap:24px}
+            .ft-bottom{flex-direction:column;gap:12px;text-align:center}
+            .tpl-top{flex-direction:column;align-items:flex-start;gap:16px}
+        }
+        @media(max-width:480px){
+            .hero-actions{flex-direction:column;width:100%}
+            .hero-actions .hero-btn-dark,.hero-actions .hero-btn-outline{width:100%;justify-content:center}
+            .cta-actions .btn-white{width:100%;justify-content:center}
+        }
+    </style>
+</head>
+<body>
+
+<nav id="nav">
+    <div class="container nav-inner">
+        <a href="#" class="logo">
+            <div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" width="15" height="15"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M10 9l4 2.5L10 14V9z"/></svg></div>
+            ThumbCraft
+        </a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#templates">Templates</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+        </ul>
+        <div class="nav-right">
+            <a href="#" class="nav-btn-login">Log in</a>
+            <a href="#" class="nav-btn-cta">Book a Demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+    </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-badge">
+            <span class="hero-badge-new">New</span>
+            All in one thumbnail editor
+        </div>
+        <h1>Smarter way to<br>create thumbnails</h1>
+        <p class="hero-subtitle">ThumbCraft helps you design professional thumbnails, manage your brand kit, and export click-worthy assets — all in one intuitive editor.</p>
+        <div class="hero-actions">
+            <a href="#" class="hero-btn-dark">Start Creating <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+            <a href="#" class="hero-btn-outline">Get Started <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+    </div>
+
+    <!-- Dashboard mockup overlapping into next section -->
+    <div class="hero-mockup-wrap">
+        <div class="hero-mockup">
+            <!-- Left card: Total Views Chart -->
+            <div class="hero-card">
+                <div class="hc-header">
+                    <div class="hc-title">Total views</div>
+                    <div class="hc-select">Last Quarter <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></div>
+                </div>
+                <div class="hc-big-num">2,845,000</div>
+                <div class="hc-change">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                    10.2% vs last month
+                </div>
+                <div class="hc-sub">Thumbnail click-through rate</div>
+                <div class="hc-bars">
+                    <div class="hc-bar-group"><div class="hc-bar" style="height:35%;background:var(--border)"></div><div class="hc-bar" style="height:25%;background:var(--warm)"></div><div class="hc-bar-label">Feb</div></div>
+                    <div class="hc-bar-group"><div class="hc-bar" style="height:45%;background:var(--border)"></div><div class="hc-bar" style="height:30%;background:var(--warm)"></div><div class="hc-bar-label">Mar</div></div>
+                    <div class="hc-bar-group"><div class="hc-bar" style="height:50%;background:var(--border)"></div><div class="hc-bar" style="height:35%;background:var(--warm)"></div><div class="hc-bar-label">Apr</div></div>
+                    <div class="hc-bar-group"><div class="hc-bar" style="height:60%;background:var(--accent)"></div><div class="hc-bar" style="height:40%;background:var(--accent-bg)"></div><div class="hc-bar-label">May</div></div>
+                    <div class="hc-bar-group"><div class="hc-bar" style="height:70%;background:var(--accent)"></div><div class="hc-bar" style="height:45%;background:var(--accent-bg)"></div><div class="hc-bar-label">Jun</div></div>
+                    <div class="hc-bar-group"><div class="hc-bar" style="height:55%;background:var(--border)"></div><div class="hc-bar" style="height:38%;background:var(--warm)"></div><div class="hc-bar-label">Jul</div></div>
+                </div>
+            </div>
+
+            <!-- Right card: Key Insights -->
+            <div class="hero-card">
+                <div class="hc-header">
+                    <div class="hc-title">Key insights</div>
+                    <div class="hc-tabs">
+                        <div class="hc-tab">1D</div>
+                        <div class="hc-tab">5D</div>
+                        <div class="hc-tab">1M</div>
+                        <div class="hc-tab on">ALL</div>
+                    </div>
+                </div>
+                <div class="hc-legend">
+                    <div class="hc-legend-item"><div class="hc-legend-dot" style="background:var(--text)"></div>Views</div>
+                    <div class="hc-legend-item"><div class="hc-legend-dot" style="background:var(--warm-2,#EBE8E2)"></div>CTR Data</div>
+                </div>
+                <div class="hc-circles">
+                    <div class="hc-circle-item">
+                        <div class="hc-circle-top">12.4%</div>
+                        <div class="hc-circle">
+                            <div class="hc-circle-outer"></div>
+                            <div class="hc-circle-val" style="background:var(--accent);color:#fff;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;">8.2%</div>
+                        </div>
+                        <div class="hc-circle-label">Best Thumbnail</div>
+                    </div>
+                    <div class="hc-circle-item">
+                        <div class="hc-circle-top">9.8%</div>
+                        <div class="hc-circle">
+                            <div class="hc-circle-outer"></div>
+                            <div class="hc-circle-val" style="background:var(--accent);color:#fff;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;">6.1%</div>
+                        </div>
+                        <div class="hc-circle-label">Average CTR</div>
+                    </div>
+                    <div class="hc-circle-item">
+                        <div class="hc-circle-top">7.2%</div>
+                        <div class="hc-circle">
+                            <div class="hc-circle-outer"></div>
+                            <div class="hc-circle-val" style="background:var(--accent);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;">4.3%</div>
+                        </div>
+                        <div class="hc-circle-label">Lowest CTR</div>
+                    </div>
+                </div>
+                <div class="hc-goal">Your goal is reached at <strong>8.5%</strong></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos">
+    <div class="container">
+        <p class="logos-label">Companies that rely on ThumbCraft to create thumbnails</p>
+        <div class="logos-row">
+            <span>TechReview</span><span>GameStream</span><span>CookWith.me</span><span>FitnessPro</span><span>StudyVault</span><span>TravelDiaries</span>
+        </div>
+    </div>
+</div>
+
+<!-- TEMPLATES -->
+<section class="sec" id="templates">
+    <div class="container">
+        <div class="tpl-top rv">
+            <div class="tpl-top-text">
+                <p class="label">Templates</p>
+                <h2>Start with a pro template</h2>
+                <p class="subdesc">300+ designs. Swap your photo and text — publish in 60 seconds.</p>
+            </div>
+            <a href="#" class="btn btn-outline">Browse All <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+        </div>
+        <div class="tpl-grid">
+            <div class="tpl rv d1">
+                <div class="tpl-thumb" style="background:#FF3D00">
+                    <div style="position:absolute;right:14px;bottom:0;width:42%;height:82%;background:rgba(0,0,0,0.1);border-radius:50% 50% 0 0"></div>
+                    <div style="position:absolute;left:16px;top:50%;transform:translateY(-50%)"><div style="width:86px;height:12px;background:rgba(255,255,255,.9);border-radius:2px;margin-bottom:6px"></div><div style="width:56px;height:7px;background:rgba(255,255,255,.4);border-radius:2px"></div></div>
+                    <div class="tpl-over"><button class="tpl-use">Use Template</button></div>
+                </div>
+                <div class="tpl-info"><div><div class="tpl-name">Bold Impact</div><div class="tpl-cat">Gaming</div></div><span class="tpl-tag">Popular</span></div>
+            </div>
+            <div class="tpl rv d2">
+                <div class="tpl-thumb" style="background:#1e1b4b">
+                    <div style="position:absolute;inset:12px;border:1px solid rgba(255,255,255,.1);border-radius:4px"></div>
+                    <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center"><div style="width:96px;height:13px;background:rgba(255,255,255,.9);border-radius:2px;margin-bottom:6px"></div><div style="width:62px;height:7px;background:rgba(255,255,255,.3);border-radius:2px;margin:0 auto"></div></div>
+                    <div class="tpl-over"><button class="tpl-use">Use Template</button></div>
+                </div>
+                <div class="tpl-info"><div><div class="tpl-name">Clean Minimal</div><div class="tpl-cat">Education</div></div><span class="tpl-tag">New</span></div>
+            </div>
+            <div class="tpl rv d3">
+                <div class="tpl-thumb" style="background:#059669">
+                    <div style="position:absolute;left:14px;top:50%;transform:translateY(-50%)"><div style="width:32px;height:32px;background:rgba(255,255,255,.18);border-radius:50%;margin-bottom:8px"></div><div style="width:66px;height:10px;background:rgba(255,255,255,.9);border-radius:2px;margin-bottom:5px"></div><div style="width:44px;height:6px;background:rgba(255,255,255,.4);border-radius:2px"></div></div>
+                    <div style="position:absolute;right:-6px;top:50%;transform:translateY(-50%);width:46%;height:70%;background:rgba(0,0,0,.06);border-radius:10px 0 0 10px"></div>
+                    <div class="tpl-over"><button class="tpl-use">Use Template</button></div>
+                </div>
+                <div class="tpl-info"><div><div class="tpl-name">Fresh Vibes</div><div class="tpl-cat">Lifestyle</div></div><span class="tpl-tag">Trending</span></div>
+            </div>
+            <div class="tpl rv d1">
+                <div class="tpl-thumb" style="background:#B91C1C">
+                    <div style="position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) rotate(-3deg);width:64%;text-align:center"><div style="width:100%;height:14px;background:rgba(255,255,255,.92);border-radius:2px;margin-bottom:5px"></div><div style="width:52%;height:8px;background:rgba(255,255,255,.3);border-radius:2px;margin:0 auto"></div></div>
+                    <div class="tpl-over"><button class="tpl-use">Use Template</button></div>
+                </div>
+                <div class="tpl-info"><div><div class="tpl-name">Firestarter</div><div class="tpl-cat">Vlogs</div></div><span class="tpl-tag">Popular</span></div>
+            </div>
+            <div class="tpl rv d2">
+                <div class="tpl-thumb" style="background:#2563EB">
+                    <div style="position:absolute;left:14px;bottom:14px"><div style="width:74px;height:10px;background:rgba(255,255,255,.9);border-radius:2px;margin-bottom:4px"></div><div style="width:48px;height:6px;background:rgba(255,255,255,.3);border-radius:2px"></div></div>
+                    <div style="position:absolute;right:14px;top:50%;transform:translateY(-50%);width:42%;height:60%;background:rgba(255,255,255,.06);border-radius:50%"></div>
+                    <div class="tpl-over"><button class="tpl-use">Use Template</button></div>
+                </div>
+                <div class="tpl-info"><div><div class="tpl-name">Tech Deep Dive</div><div class="tpl-cat">Technology</div></div><span class="tpl-tag">New</span></div>
+            </div>
+            <div class="tpl rv d3">
+                <div class="tpl-thumb" style="background:#7C3AED">
+                    <div style="position:absolute;left:50%;top:36%;transform:translate(-50%,-50%)"><div style="width:40px;height:40px;border:2.5px solid rgba(255,255,255,.6);border-radius:50%"></div></div>
+                    <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);text-align:center"><div style="width:80px;height:9px;background:rgba(255,255,255,.9);border-radius:2px;margin-bottom:4px"></div><div style="width:54px;height:6px;background:rgba(255,255,255,.3);border-radius:2px;margin:0 auto"></div></div>
+                    <div class="tpl-over"><button class="tpl-use">Use Template</button></div>
+                </div>
+                <div class="tpl-info"><div><div class="tpl-name">Neon Glow</div><div class="tpl-cat">Music</div></div><span class="tpl-tag">Trending</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec" id="features" style="padding-top:0">
+    <div class="container">
+        <div class="feat-top rv">
+            <p class="label">Features</p>
+            <h2>Everything you need,<br>nothing you don't</h2>
+            <p class="subdesc">Built for one thing — thumbnails that are impossible to scroll past.</p>
+        </div>
+        <div class="feat-grid">
+            <div class="feat rv d1">
+                <div class="feat-icon" style="background:var(--accent-bg)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+                <h3>Smart Layouts</h3>
+                <p>Rule-of-thirds, golden ratio guides, and magnetic snap points position content for maximum impact.</p>
+            </div>
+            <div class="feat rv d2">
+                <div class="feat-icon" style="background:var(--purple-bg)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
+                <h3>Pro Typography</h3>
+                <p>800+ fonts, smart pairing, auto-sizing, outlines, shadows, and effects — all built in.</p>
+            </div>
+            <div class="feat rv d3">
+                <div class="feat-icon" style="background:var(--blue-bg)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
+                <h3>AI Backgrounds</h3>
+                <p>Generate backgrounds with AI or remove them in one click. No green screen needed.</p>
+            </div>
+            <div class="feat rv d1">
+                <div class="feat-icon" style="background:var(--emerald-bg)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4z"/></svg></div>
+                <h3>Brand Kit</h3>
+                <p>Save your colors, fonts, and logos. Keep every thumbnail consistent with your channel.</p>
+            </div>
+            <div class="feat rv d2">
+                <div class="feat-icon" style="background:var(--amber-bg)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div>
+                <h3>Instant Export</h3>
+                <p>Crisp 1280x720 in PNG or JPG. Optimized for YouTube's compression algorithm.</p>
+            </div>
+            <div class="feat rv d3">
+                <div class="feat-icon" style="background:var(--rose-bg)"><svg viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+                <h3>Live Preview</h3>
+                <p>See how your thumbnail looks in YouTube search and suggested before you publish.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SPLIT: COMPOSITION -->
+<section class="sec">
+    <div class="container">
+        <div class="split">
+            <div class="split-text rv">
+                <p class="label">Composition</p>
+                <h2>Precision design, zero guesswork</h2>
+                <p>Our intelligent grid guides you to place subjects, text, and graphics exactly where they drive the most clicks.</p>
+                <ul class="checks">
+                    <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Rule-of-thirds & golden ratio overlay</li>
+                    <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Magnetic snap-to-grid edges</li>
+                    <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Smart auto-align & distribute</li>
+                </ul>
+            </div>
+            <div class="split-vis rv d2">
+                <div class="demo-t">
+                    <div class="gl h" style="top:33.33%"></div><div class="gl h" style="top:66.66%"></div>
+                    <div class="gl v" style="left:33.33%"></div><div class="gl v" style="left:66.66%"></div>
+                    <div class="sn" style="left:calc(33.33% - 3px);top:calc(33.33% - 3px)"></div>
+                    <div class="sn" style="left:calc(66.66% - 3px);top:calc(33.33% - 3px);animation-delay:-.6s"></div>
+                    <div class="sn" style="left:calc(33.33% - 3px);top:calc(66.66% - 3px);animation-delay:-1.2s"></div>
+                    <div class="sn" style="left:calc(66.66% - 3px);top:calc(66.66% - 3px);animation-delay:-1.8s"></div>
+                    <div style="position:absolute;left:8%;top:50%;transform:translateY(-50%)"><div style="width:60px;height:10px;background:rgba(255,255,255,.85);border-radius:2px;margin-bottom:4px"></div><div style="width:38px;height:6px;background:rgba(255,255,255,.35);border-radius:2px"></div></div>
+                    <div style="position:absolute;right:6%;top:18%;width:28%;height:60%;background:rgba(99,102,241,.2);border-radius:5px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SPLIT: BRAND -->
+<section class="sec">
+    <div class="container">
+        <div class="split rev">
+            <div class="split-text rv">
+                <p class="label">Brand Kit</p>
+                <h2>Your brand, every single time</h2>
+                <p>Save your channel's visual identity once. Apply it everywhere. Every thumbnail becomes part of a cohesive series.</p>
+                <ul class="checks">
+                    <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Custom palettes with hex values</li>
+                    <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Font pairing presets</li>
+                    <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>Logos & watermarks — upload once</li>
+                </ul>
+            </div>
+            <div class="split-vis rv d2">
+                <div class="bk-vis">
+                    <div><div class="bk-h">Colors</div><div class="bk-colors"><div class="bk-c" style="background:#FF3D00"></div><div class="bk-c" style="background:#1e1b4b"></div><div class="bk-c" style="background:#fafafa"></div><div class="bk-c" style="background:#18181b"></div></div></div>
+                    <div><div class="bk-h">Fonts</div><div class="bk-f"><strong>Montserrat</strong><span>Bold · Heading</span></div><div class="bk-f"><strong>Inter</strong><span>Regular · Body</span></div></div>
+                    <div><div class="bk-h">Logo</div><div class="bk-drop"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Drop logo here</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- NUMBERS -->
+<section class="sec-sm">
+    <div class="container">
+        <div class="nums">
+            <div class="num rv d1"><div class="num-v">50K+</div><div class="num-l">Active creators</div></div>
+            <div class="num rv d2"><div class="num-v">2M+</div><div class="num-l">Thumbnails created</div></div>
+            <div class="num rv d3"><div class="num-v">300+</div><div class="num-l">Pro templates</div></div>
+            <div class="num rv d4"><div class="num-v">4.9</div><div class="num-l">Average rating</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec reviews-bg" id="reviews">
+    <div class="container">
+        <div class="reviews-top rv">
+            <p class="label">Testimonials</p>
+            <h2>Loved by creators</h2>
+            <p>What YouTubers say about ThumbCraft.</p>
+        </div>
+        <div class="reviews-grid">
+            <div class="review rv d1">
+                <div class="stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                <p class="review-q">"My CTR went from 4% to 11% in two weeks. The templates are insanely good and the editor is buttery smooth."</p>
+                <div class="review-who"><div class="review-av" style="background:var(--accent)">M</div><div><div class="review-name">Marcus Chen</div><div class="review-role">Tech · 420K subs</div></div></div>
+            </div>
+            <div class="review rv d2">
+                <div class="stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                <p class="review-q">"45 minutes in Photoshop → 5 minutes here. A genuine game-changer for small creators."</p>
+                <div class="review-who"><div class="review-av" style="background:var(--purple)">S</div><div><div class="review-name">Sarah Kim</div><div class="review-role">Lifestyle · 89K subs</div></div></div>
+            </div>
+            <div class="review rv d3">
+                <div class="stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                <p class="review-q">"Brand kit alone is worth it. My channel feels 10x more professional and cohesive. Can't believe it's free."</p>
+                <div class="review-who"><div class="review-av" style="background:var(--emerald)">J</div><div><div class="review-name">Jake Morrison</div><div class="review-role">Gaming · 1.2M subs</div></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-wrap" id="pricing">
+    <div class="container">
+        <div class="cta rv">
+            <div class="cta-inner">
+                <p class="label">Pricing</p>
+                <h2>Completely free.<br><span style="color:var(--accent)">No, really.</span></h2>
+                <p class="cta-p">Every creator deserves professional thumbnails. No watermarks. No sign-up walls. No premium tiers.</p>
+                <div class="cta-perks">
+                    <span class="cta-perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>All 300+ templates</span>
+                    <span class="cta-perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>HD export, no watermark</span>
+                    <span class="cta-perk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>AI background tools</span>
+                </div>
+                <a href="#" class="btn-white">Start Creating — It's Free <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                <p class="cta-note">No account needed. Start designing in seconds.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<footer>
+    <div class="container">
+        <div class="ft-grid">
+            <div class="ft-brand"><a href="#" class="logo"><div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" width="15" height="15"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M10 9l4 2.5L10 14V9z"/></svg></div>ThumbCraft</a><p>The free YouTube thumbnail editor for creators who care about their craft.</p></div>
+            <div class="ft-col"><h4>Product</h4><a href="#">Editor</a><a href="#">Templates</a><a href="#">Brand Kit</a><a href="#">AI Tools</a></div>
+            <div class="ft-col"><h4>Resources</h4><a href="#">Thumbnail Guide</a><a href="#">CTR Tips</a><a href="#">Blog</a><a href="#">Community</a></div>
+            <div class="ft-col"><h4>Company</h4><a href="#">About</a><a href="#">Contact</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+        </div>
+        <div class="ft-bottom">
+            <span>&copy; 2026 ThumbCraft</span>
+            <div class="ft-socials">
+                <a href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                <a href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+                <a href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 00-5.487 0c-.164-.393-.406-.874-.618-1.25a.077.077 0 00-.079-.037 19.74 19.74 0 00-4.885 1.515.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.058a.08.08 0 00.031.056 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.873-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.11 13.11 0 01-1.872-.892.077.077 0 01-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 01.078-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.009c.12.1.246.198.373.292a.077.077 0 01-.006.127c-.598.35-1.22.645-1.873.892a.076.076 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.84 19.84 0 006.002-3.03.077.077 0 00.031-.055c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 00-.031-.028zM8.02 15.33c-1.183 0-2.157-1.086-2.157-2.419s.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42 0 1.332-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.086-2.157-2.419s.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42 0 1.332-.946 2.418-2.157 2.418z"/></svg></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+const o=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.rv').forEach(el=>o.observe(el));
+
+// Nav: switch to scrolled (light bg) once past the hero orange section
+const navEl=document.getElementById('nav');
+const heroEl=document.querySelector('.hero');
+function checkNav(){
+    const heroBottom=heroEl.getBoundingClientRect().bottom;
+    navEl.classList.toggle('scrolled',heroBottom<64);
+}
+window.addEventListener('scroll',checkNav,{passive:true});
+checkNav();
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){const h=this.getAttribute('href');if(h==='#')return;e.preventDefault();document.querySelector(h)?.scrollIntoView({behavior:'smooth',block:'start'})})});
+</script>
+</body>
+</html>
