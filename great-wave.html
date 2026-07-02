@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Great Wave — ASCII</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: #070c18; overflow: hidden; }
+  #wrap { position: fixed; inset: 0; overflow: hidden; }
+  #c { position: absolute; inset: 0; }
+</style>
+</head>
+<body>
+  <div id="wrap"><canvas id="c"></canvas></div>
+  <script>
+  (function () {
+    var DEEP = '#142b5c', MID = '#284e9c', LT = '#4a72c0', FOAMC = '#efe9d2', FUJI = '#2a3a5a', SNOW = '#e8e2cf';
+    var WATER = [' ', '·', ':', ';', '~', '-', '=', '+', 'x', 'X', '#', '%', '&'];
+    var FOAM = [' ', '·', ':', '*', 'o', 'O', '0', '#', '%', '@', '&'];
+
+    var wrap = document.getElementById('wrap'), canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var dpr = 1, cell = 8, W = 0, H = 0, COLS = 0, ROWS = 0;
+    var base = null, foam = [], sprays = [], raf = 0;
+    var pointer = { tx: 0, ty: 0, x: 0, y: 0 };
+
+    function hash(i) { var n = (i * 374761393) & 0xffffffff; return ((n ^ (n >> 13)) & 0xffffffff) >>> 0; }
+    function gaussian(x, mu, s) { var d = (x - mu) / s; return Math.exp(-d * d); }
+    function crestY(x) { return 0.60 - 0.46 * gaussian(x, 0.24, 0.15) - 0.10 * gaussian(x, 0.5, 0.28); }
+
+    function build() {
+      var rect = wrap.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = rect.width; H = rect.height;
+      cell = Math.max(6, Math.min(W * 0.006, 11));
+      COLS = Math.ceil(W / cell); ROWS = Math.ceil(H / cell);
+      canvas.width = Math.ceil(W * dpr); canvas.height = Math.ceil(H * dpr);
+      canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var fontStr = (cell * 1.05).toFixed(2) + 'px "Courier New", monospace';
+      ctx.font = fontStr; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+
+      base = document.createElement('canvas');
+      base.width = canvas.width; base.height = canvas.height;
+      var bx = base.getContext('2d');
+      bx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      bx.font = fontStr; bx.textAlign = 'center'; bx.textBaseline = 'middle';
+
+      foam = []; sprays = [];
+      for (var r = 0; r < ROWS; r++) {
+        for (var c = 0; c < COLS; c++) {
+          var x = c / COLS, y = r / ROWS;
+          var px = c * cell + cell / 2, py = r * cell + cell / 2;
+          // Mt Fuji (background, center-right)
+          var fx = 0.66, apex = 0.34, fbase = 0.52, hw = 0.16;
+          if (y >= apex && y <= fbase) {
+            var spread = hw * (y - apex) / (fbase - apex);
+            if (Math.abs(x - fx) < spread) {
+              if (y - apex < 0.05 && Math.abs(x - fx) < spread * 0.7) { bx.fillStyle = SNOW; bx.fillText('#', px, py); }
+              else if (hash(c * 7 + r * 13) % 3 === 0) { bx.fillStyle = FUJI; bx.fillText('·', px, py); }
+              continue;
+            }
+          }
+          var cY = crestY(x);
+          if (y > cY) {
+            var depth = (y - cY) / (1 - cY);
+            if (depth < 0.055) {
+              foam.push({ c: c, r: r, k: 0 }); // crest foam (animated)
+            } else {
+              var idx = Math.floor(Math.min(0.99, depth * 1.3) * (WATER.length - 1));
+              var ch = (hash(c * 13 + r * 7) % 5 !== 0 || depth > 0.2) ? WATER[idx] : ' ';
+              if (ch !== ' ') { bx.fillStyle = depth > 0.55 ? DEEP : (depth > 0.25 ? MID : LT); bx.fillText(ch, px, py); }
+            }
+          } else if (cY - y < 0.12 && x < 0.55 && hash(c * 3 + r * 5) % Math.max(2, ((2 + (cY - y) * 40) | 0)) === 0) {
+            foam.push({ c: c, r: r, k: 1 }); // spray (animated)
+          }
+        }
+      }
+      // foam fingers / claws over the crest
+      for (var kf = 0; kf < 6; kf++) {
+        var ang = -0.5 - kf * 0.18, ln = 0.10 + 0.06 * (kf % 3);
+        var steps = Math.round(ln * ROWS * 1.6);
+        for (var s = 0; s <= steps; s++) {
+          var tt = s / Math.max(1, steps);
+          var xx = 0.26 + 0.01 * kf + Math.cos(ang) * ln * tt * 1.4 + 0.10 * tt;
+          var yy = 0.15 + Math.sin(ang) * ln * tt - 0.02 * tt;
+          var cc = (xx * COLS) | 0, rr = (yy * ROWS) | 0;
+          if (cc >= 0 && cc < COLS && rr >= 0 && rr < ROWS) foam.push({ c: cc, r: rr, k: 2 });
+        }
+      }
+    }
+
+    function draw(now) {
+      ctx.clearRect(0, 0, W, H);
+      if (!base) { raf = requestAnimationFrame(draw); return; }
+      var t = now / 1000;
+      pointer.x += (pointer.tx - pointer.x) * 0.05;
+      pointer.y += (pointer.ty - pointer.y) * 0.05;
+      var ox = pointer.x * 8;
+      var oy = pointer.y * 5 + (reduceMotion ? 0 : Math.sin(t * 0.5) * 2.5);
+
+      ctx.drawImage(base, ox, oy, W, H);
+
+      // churning foam
+      ctx.fillStyle = FOAMC;
+      for (var i = 0; i < foam.length; i++) {
+        var f = foam[i];
+        var px = f.c * cell + cell / 2 + ox, py = f.r * cell + cell / 2 + oy;
+        var lo = f.k === 0 ? 6 : (f.k === 2 ? 4 : 1); // density floor by kind
+        var span = f.k === 1 ? 4 : (FOAM.length - lo);
+        var churn = reduceMotion ? 0 : ((hash(f.c * 91 + f.r * 17) + ((t * 6) | 0)) % 3);
+        var gi = Math.min(FOAM.length - 1, lo + ((hash(f.c + f.r * 53) % Math.max(1, span))) - 1 + churn);
+        if (gi < 1) gi = 1;
+        ctx.globalAlpha = reduceMotion ? 0.9 : 0.65 + 0.35 * Math.abs(Math.sin(t * 2 + f.c * 0.3 + f.r * 0.2));
+        ctx.fillText(FOAM[gi], px, py);
+      }
+      ctx.globalAlpha = 1;
+
+      // rising spray droplets off the crest
+      if (!reduceMotion) {
+        while (sprays.length < 34) {
+          var sx = 0.14 + Math.random() * 0.34;
+          sprays.push({ x: sx, y: crestY(sx) - 0.01, vx: 0.02 + Math.random() * 0.05, vy: -(0.05 + Math.random() * 0.10), age: 0, life: 0.9 + Math.random() * 1.1 });
+        }
+        for (var k = sprays.length - 1; k >= 0; k--) {
+          var sp = sprays[k];
+          sp.age += 1 / 60;
+          if (sp.age >= sp.life) { sprays.splice(k, 1); continue; }
+          var prog = sp.age / sp.life;
+          var dxp = (sp.x + sp.vx * sp.age) * COLS * cell + ox;
+          var dyp = (sp.y + sp.vy * sp.age + 0.5 * 0.12 * sp.age * sp.age) * ROWS * cell + oy;
+          ctx.globalAlpha = (1 - prog) * 0.8;
+          ctx.fillText(prog < 0.5 ? '·' : (prog < 0.8 ? ':' : '`'), dxp, dyp);
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      raf = requestAnimationFrame(draw);
+    }
+
+    function onMove(e) { pointer.tx = (e.clientX / window.innerWidth - 0.5) * 2; pointer.ty = (e.clientY / window.innerHeight - 0.5) * 2; }
+    var rt = 0;
+    function onResize() { clearTimeout(rt); rt = setTimeout(build, 150); }
+
+    build();
+    raf = requestAnimationFrame(draw);
+    if (!reduceMotion) window.addEventListener('pointermove', onMove);
+    window.addEventListener('resize', onResize);
+  })();
+  </script>
+</body>
+</html>

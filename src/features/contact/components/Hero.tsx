@@ -1,5 +1,7 @@
 import { motion, cubicBezier } from "framer-motion";
 import { site } from "../../../config/site";
+import AsciiImage from "../../../components/AsciiImage";
+import mePortrait from "../../../assets/me.png";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);
 
@@ -13,6 +15,11 @@ export default function Hero() {
   return (
     <section>
       <div className="relative w-full min-h-[40rem] bg-black flex flex-col justify-center items-center overflow-hidden">
+        {/* Faint ASCII backdrop — same scattered glyph field as About */}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.28]">
+          <AsciiImage src={mePortrait} invert={false} cols={150} className="block w-full" />
+        </div>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/70" />
         <h1 className="text-center z-[1] px-8">
           <span className="block overflow-hidden mb-2">
             <motion.span

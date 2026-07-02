@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hand of God — ASCII</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: #000; overflow: hidden; }
+  #wrap { position: fixed; inset: 0; overflow: hidden; }
+  #c { position: absolute; inset: 0; opacity: 0.7; }
+</style>
+</head>
+<body>
+  <div id="wrap"><canvas id="c"></canvas></div>
+  <script>
+  (function () {
+    var COLS = 80, COLOR = '#983520', RIPPLE_COLOR = '#ff8a52', SPARK_COLOR = '#ffe4c4', EMBER_COLOR = '#c86a44';
+    var GLYPH_RATIO = 1.2, PAD_TOP = 0.16, AMP_X = 15, AMP_Y = 6, EDGE_BLEED = AMP_X + 2;
+    var INTRO_DUR = 1600, SPARK_START_DELAY = 700, PERIOD = 5200, SPARK_DUR = 520, RIPPLE_START = 460, RIPPLE_DUR = 1550, CHARGE_DUR = 520;
+    var POOL = '«»[]{}()<>/\\|;:!?+=~^-'.split('');
+    var leftLines = ("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                       ·.,·.\n                     .;=:;>+++;:~-,\n                   ?/«[[)\\|=;;:?:?<><`\n                 :[/)(\\|»]|;>!+?;+!>>!+:~·\n               .>\\[[/»(}\\{»[);>;<::!?:[<<(`..\n           .·~>>»/)()\\){»|[«[/>+:>=?<<)(?+<;+--~:`·\n      ,?[[)()))((/})|([\\«»»}\\[\\«};<!!;/{»»/)|?+?+:<+<!>^.\n   .^[[|}/]]()\\}>!?=]{/}\\|[}»[|{)[<>:«»]|}\\]|[]«<;;>>^==>?.\n .?]/}}»)|)»»)(;:<<=;!;!:+>=<\\)}{\\)}][}}\\\\{\\)\\]/])/?>>;==<~\n?|})//)|\\{\\=!:=:?-~^;~;--+>??\\{([[({}«))(/)}»«][|»]\\}(>++<^,\n}([]{\\}{\\/:<:;^`;;-,,,.···~~?}\\]}|)(«]\\(»})[/|\\«}(||\\\\]»)>::\n\\«]\\|[?>+;;~~-···,·,,-,·,·,·^|»«}}»\\)//[«}/\\«\\)}(\\[/(»[\\]}?~;\n«])}>;<!=~;^`:.,,;^;-~`~-:.,~+]\\{[[{»\\/{})([}}»\\]«/)(()\\{/:=>~,\n{/|<;;==>;~`-:·,,^`-`~·.,.·.,:[«{[«})\\]}|\\]}){};««)}({/|{)»<!:?^,.·\n[?!>=+;:!+:;~:,,.-~..·,,.,,·,.;|/[}»{(»]|/||»\\::==;;?\\)}]}»/><<=:·.·,\n}?<=!<+;>`;-···-;...···.:^...,?<)«)/«{][/{|}?<;;-:~:</[[([/\\[[[:+;`:`.\n<!>::!><-^:,·`^-·,.,.·:;,,·...<==[{([»\\»\\\\»|:;:,,.·<]+;<{{«)}«|«/\\==:^`,\n?++=<==^;^,··.·..,·:.··.···.. .|+=+/}(»{)({)+::·-^=<: :+|«\\=;\\{|{[/\\=+!:·\n:?!;>>-:`..·.,.,··.,,,··.·     `)<!=/{|)([)»|)!;,~·.,,·,·=!~·,>«][]]];;`·\n;=?<=^;-··.··,·····..·,        ·=<:;?}\\[\\}])«{{^.·.,.·,.{.,·]»/.=+<:/(»=~.\n=?+=^^:.·.,··.·..,.,·,          ~?<=>+=+(())|\\{:· .·  ·,,««[/|.···~^^;};=^\n+<:;;~.,...··,,.,                `?+:>=?[{(»(}{:-·     »«,\\/|)  ·..,·>:({>,\n=^-^-,,..,·.·.·.                  ·==~<?=}\\\\»]:=<-,    ·,·|<(<  ,,.,··>+\\]<.\n~:-;,,··.·,·.,,                     ~;:;~//[//»<+?-·   ,,·)>{]   ···|),+!><;\n`;.`...··.,.··.                          .<}}«}}{|>:·  ,,,<]}.    ,.(,{ -!=<.\n.,..·,··.,     ,                           ,!««]«(/><·,>·](}«     ..{·} «-=;-\n·..·,.·,                                      `;\\[\\(>=~.,·.]»     . .,«   :=:,\n,·,,,··,                                       ·!>«=;;:?^][/|     · ..\\   ·<+-\n.,,.,·· .                                        ,;:;:;;:.·|)     «].·|)   ;>=,\n·,,·.                                             ·?!>:+==,(<     »/|\\)>    ;-:\n,,·.                                               ·;>::~`;,]     ||)><]\n.,·     ·                                           .<!-,:`:»     )(<{(}\n··,   ,                                              :·.;+=~,     <{]}«\n,.                                                   ·^..=<;~      }»«[\n                                                     :;,.;;^,      «[\\>\n                                                     ·:·  ,,      .»/., ·\n                                                     .:            |\\(·,\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n").split('\n');
+    var rightLines = ("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n                                                                               .\n                                                                  ·`;^--;=:;>\\\\\\\n                                                              ,?«}|[/«[[)\\||»»}]\n                                                     ,-``;`-<|[/)(\\|»]|»){\\[»\\{)\n                                                   ~+}}/|/{)\\[[/»(}\\{»[)»[»(}«}]\n                                          ·`;`--:>[|{))»/)()\\){»|[«[/)/})|](\\)(]\n                                    ·,;-?}/(\\(/»{][[)()))((/})|([\\«»»}\\[\\«}»(]{«\n                                  ~;»/)|[/[/}\\\\(})»]){»[[|}/]]()\\}[!?=]{/}\\|[}»[\n                               .>[))««»]|}\\]|[]«(«»)[«||>?>?!?]/::;>=>;»)(»})(|»\n           ,,,·.··      ·.,..~:\\\\{\\)\\]/])/[))»|/\\{«[|}>++>=<~;=!:=:??:;(}([{\\)]]\n         ,<>[(!:«>><:`:;«][|»]\\}()//(»}{}([]{\\}{\\/«(«;;<<<-~~^`:+<!:?:\\]}|)(«]\\(\n     ~>>/|\\«}(||\\\\]»))}|»\\«]\\|[[[/««}}[(\\|»\\»«]:+!\\;;^=;;:~^;`;:>::=+;\\)}(\\[/(»[\n ·.:[{(])«]):`;\\{|}\\«(|)}»(«<?})}?={«}\\]\\{[[{»\\=~~`..~!;+?^:``;`;!=:=>{«/)|{/|(\\\n,||)(}>!++;^^`->!+>!?(){|[«{?^!>+-:|\\]}){}»««)}<~··,.^<!^-^~-=^`-!>=+;:{/|\\}|{{[\n.{)?=:^.,,·,.,··-~^~;;]|/||»+~,··<»]\\)}]}»/[((=::.·,·,-`:~;+;>><?=+=!<>])((/)/«)\n .`~.·.,        ·,..·<]|!=(/>.·-/\\[[[«\\«(|)[}»<-.,,,.·.^::<<;?+!?:<+=<!;+{[{(/|[\n                     ·:»=~:[=`.+«({{«>!«|«/\\|=~^.,..···`::^;^^:;-:-`^::>=<>+++>?\n                      ·`:··;:~<»{)({)+:+|]«|<=:···,····,:~`:;:;-:;:-~^``-:>>?;<!\n                        ,··-,^}\\(]|\\:```!|=!=`·..,·..·,,·.,,·,··~~:~>;?????;;`:>\n                        ·-.::\\[|()++^··;++`-:,·..··.,,.,·.·,..,,,,.·`^-+;?+>:;::\n                       .`:+(«/(»=:`.·.··^^·-·.,··.·..,.,·,·,.,.··.;:;;```:;-^::`\n                      ·»[/»«[»+`:.···,,,,,,·,·,··,··,.,...··,,.,.-^^``-;~`:-`~;^\n                    ·~!«](\\]]?~,·.·,.,·..,·.,·,.,.·,.,.        ,·.;`:``-^`;:··~`\n                  .·:\\+»]}=<-,·.·^:`,,.,·,,.,··.··...,            ,··-:^:-,,.,.~\n                 <»{\\|<:/+-:·,.;?[|<.,,·.·,,·..···.,,                 ·,..·.....\n                 +>»(||[;`~,··,^](}}:,~-·.··.,,,,.,.                         ,,.\n                 <;[;!{|<`,.~?.·^|\\];^-:+~^,,·,.,,                              \n                 ,<=><+^;··!+=,,,+)[<=;~??>;-,·..                               \n                   .:,,  -[(=;··  ·`+<>:,!;;-^,                                 \n                   +!:..-:<:~··  ^;,·^~~··~`,                                   \n                   >:;··:!`^·,   »;;.                                           \n                  .!|^·.+!;.,   `»<;,                                           \n                  ·:=:,·>:;^,  ,;:-·.                                           \n                  :;`·.·/=!·   ,^,·,                                            \n                  :?`,,~=?:.   .-.,·                                            \n                  ·|:.,«>,,    ·;^·                                             \n                  .:|^,|!:,    ,!=;·                                            \n                   =»`,}}`·    ,=|<.                                            \n                   :/-.{»:,    ,;»\\·                                            \n                   :>`·{?^      :+>                                             \n                   `?`,`;·       ,                                              \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                \n                                                                                ").split('\n');
+    function hash(i) { return (i * 2654435761) >>> 0; }
+
+    var wrap = document.getElementById('wrap'), canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var dpr = 1, cell = 8, W = 0, H = 0, left = null, right = null, glyphsL = [], glyphsR = [], tipGlyphsL = [], tipGlyphsR = [];
+    var contactX = 0, contactY = 0, godTipX = 0, godTipY = 0, adamTipX = 0, adamTipY = 0, maxDist = 1, raf = 0, start = 0, lastNow = 0;
+    var flickers = [], embers = [];
+    function randGlyph(seed) { return POOL[hash(seed) % POOL.length]; }
+
+    function buildHand(lines) {
+      var rows = lines.length, cv = document.createElement('canvas');
+      cv.width = Math.ceil(COLS * cell * dpr); cv.height = Math.ceil(rows * cell * dpr);
+      var c = cv.getContext('2d'); c.scale(dpr, dpr);
+      c.font = (cell * GLYPH_RATIO).toFixed(2) + 'px "Courier New", monospace';
+      c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = COLOR;
+      for (var r = 0; r < rows; r++) { var line = lines[r]; for (var col = 0; col < Math.min(COLS, line.length); col++) { if (line[col] !== ' ') c.fillText(line[col], col * cell + cell / 2, r * cell + cell / 2); } }
+      return { cv: cv, rows: rows };
+    }
+    function originY(rows) { return (H + PAD_TOP * H - rows * cell) / 2; }
+    function collect(lines, x0) { var oy = originY(lines.length), out = []; for (var r = 0; r < lines.length; r++) { var line = lines[r]; for (var col = 0; col < Math.min(COLS, line.length); col++) { if (line[col] !== ' ') out.push({ ch: line[col], bx: x0 + col * cell + cell / 2, by: oy + r * cell + cell / 2 }); } } return out; }
+
+    function build() {
+      var rect = wrap.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2); W = rect.width; H = rect.height;
+      cell = Math.max(6, Math.min(W * 0.0057, 11));
+      canvas.width = Math.ceil(W * dpr); canvas.height = Math.ceil(H * dpr);
+      canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.font = (cell * GLYPH_RATIO).toFixed(2) + 'px "Courier New", monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      left = buildHand(leftLines); right = buildHand(rightLines);
+      var lw = COLS * cell;
+      glyphsL = collect(leftLines, 0); glyphsR = collect(rightLines, W - lw);
+      adamTipX = -Infinity; for (var i = 0; i < glyphsL.length; i++) { if (glyphsL[i].bx > adamTipX) { adamTipX = glyphsL[i].bx; adamTipY = glyphsL[i].by; } }
+      godTipX = Infinity; for (var j = 0; j < glyphsR.length; j++) { if (glyphsR[j].bx < godTipX) { godTipX = glyphsR[j].bx; godTipY = glyphsR[j].by; } }
+      contactX = (adamTipX + godTipX) / 2; contactY = (adamTipY + godTipY) / 2; maxDist = 1;
+      for (var a = 0; a < glyphsL.length; a++) { var d1 = Math.hypot(glyphsL[a].bx - contactX, glyphsL[a].by - contactY); if (d1 > maxDist) maxDist = d1; }
+      for (var b = 0; b < glyphsR.length; b++) { var d2 = Math.hypot(glyphsR[b].bx - contactX, glyphsR[b].by - contactY); if (d2 > maxDist) maxDist = d2; }
+      var near = cell * 4.5;
+      tipGlyphsL = glyphsL.filter(function (g) { return Math.hypot(g.bx - adamTipX, g.by - adamTipY) < near; });
+      tipGlyphsR = glyphsR.filter(function (g) { return Math.hypot(g.bx - godTipX, g.by - godTipY) < near; });
+      flickers.length = 0; embers.length = 0;
+    }
+
+    var pointer = { tx: 0, ty: 0, x: 0, y: 0 };
+
+    function draw(now) {
+      if (!start) { start = now; lastNow = now; }
+      var dt = Math.min(64, now - lastNow); lastNow = now; var elapsed = now - start;
+      ctx.clearRect(0, 0, W, H);
+      if (!left || !right) { raf = requestAnimationFrame(draw); return; }
+      pointer.x += (pointer.tx - pointer.x) * 0.06; pointer.y += (pointer.ty - pointer.y) * 0.06;
+      var dx = pointer.x * AMP_X, dy = pointer.y * AMP_Y, lw = COLS * cell;
+      var lox = -dx - EDGE_BLEED, rox = dx + EDGE_BLEED;
+      var oyL = originY(left.rows) + dy, oyR = originY(right.rows) + dy;
+      if (reduceMotion) { ctx.drawImage(left.cv, lox, oyL, lw, left.rows * cell); ctx.drawImage(right.cv, W - lw + rox, oyR, lw, right.rows * cell); return; }
+      if (elapsed < INTRO_DUR) {
+        var p = elapsed / INTRO_DUR; ctx.fillStyle = COLOR;
+        var decode = function (arr, ox) { for (var i = 0; i < arr.length; i++) { var g = arr[i]; var rv = (hash(i) % 1000) / 1000 * 0.65; var local = (p - rv) / 0.35; var ch, al;
+          if (local <= 0) { ch = randGlyph(i + ((now / 70) | 0)); al = 0.16; }
+          else if (local < 1) { ch = local < 0.65 ? randGlyph(i + ((now / 50) | 0)) : g.ch; al = 0.16 + local * 0.84; }
+          else { ch = g.ch; al = 1; }
+          ctx.globalAlpha = al; ctx.fillText(ch, g.bx + ox, g.by + dy); } };
+        decode(glyphsL, lox); decode(glyphsR, rox); ctx.globalAlpha = 1; raf = requestAnimationFrame(draw); return;
+      }
+      ctx.drawImage(left.cv, lox, oyL, lw, left.rows * cell);
+      ctx.drawImage(right.cv, W - lw + rox, oyR, lw, right.rows * cell);
+      for (var k = flickers.length - 1; k >= 0; k--) { if (flickers[k].until < now) flickers.splice(k, 1); }
+      while (flickers.length < 26) { var hand = Math.random() < 0.5 ? 0 : 1; var arr = hand ? glyphsR : glyphsL; flickers.push({ hand: hand, idx: (Math.random() * arr.length) | 0, until: now + 120 + Math.random() * 260, ch: randGlyph((Math.random() * 9999) | 0) }); }
+      ctx.fillStyle = COLOR;
+      for (var fi = 0; fi < flickers.length; fi++) { var f = flickers[fi]; var arr2 = f.hand ? glyphsR : glyphsL; var g2 = arr2[f.idx]; if (!g2) continue; var x = g2.bx + (f.hand ? rox : lox), y = g2.by + dy; ctx.clearRect(x - cell / 2, y - cell / 2, cell, cell); ctx.fillText(f.ch, x, y); }
+      var stt = elapsed - INTRO_DUR - SPARK_START_DELAY;
+      if (stt > 0) {
+        var t = stt % PERIOD;
+        if (t > PERIOD - CHARGE_DUR) { var ci = (t - (PERIOD - CHARGE_DUR)) / CHARGE_DUR; var flick = 0.6 + 0.4 * Math.abs(Math.sin(now / 40)); ctx.fillStyle = SPARK_COLOR;
+          for (var ti = 0; ti < tipGlyphsL.length; ti++) { ctx.globalAlpha = ci * flick; ctx.fillText(tipGlyphsL[ti].ch, tipGlyphsL[ti].bx + lox, tipGlyphsL[ti].by + dy); }
+          for (var tj = 0; tj < tipGlyphsR.length; tj++) { ctx.globalAlpha = ci * flick; ctx.fillText(tipGlyphsR[tj].ch, tipGlyphsR[tj].bx + rox, tipGlyphsR[tj].by + dy); }
+          ctx.globalAlpha = 1; }
+        if (t >= RIPPLE_START && t < RIPPLE_START + RIPPLE_DUR) { var pr = (t - RIPPLE_START) / RIPPLE_DUR; var radius = pr * maxDist; var band = cell * 7; var tail = 1 - pr * 0.55; ctx.fillStyle = RIPPLE_COLOR;
+          var paint = function (arr, ox) { for (var i = 0; i < arr.length; i++) { var g = arr[i]; var dd = Math.abs(Math.hypot(g.bx - contactX, g.by - contactY) - radius); if (dd < band) { ctx.globalAlpha = (1 - dd / band) * tail; ctx.fillText(g.ch, g.bx + ox, g.by + dy); } } };
+          paint(glyphsL, lox); paint(glyphsR, rox); ctx.globalAlpha = 1; }
+        if (t < SPARK_DUR) { var head = t / SPARK_DUR; var gx = godTipX + rox, gy = godTipY + dy, ax = adamTipX + lox, ay = adamTipY + dy; var steps = Math.max(2, Math.round(Math.hypot(ax - gx, ay - gy) / cell)); ctx.fillStyle = SPARK_COLOR;
+          for (var si = 0; si <= steps; si++) { var u = si / steps; if (u > head) break; var behind = head - u; if (behind > 0.45) continue; ctx.globalAlpha = 1 - behind / 0.45; ctx.fillText(behind < 0.06 ? '*' : '=', gx + (ax - gx) * u, gy + (ay - gy) * u); }
+          ctx.globalAlpha = 1; }
+      }
+      if (embers.length < 22 && Math.random() < 0.04) { var fromR = Math.random() < 0.5; var arr3 = fromR ? glyphsR : glyphsL; var ge = arr3[(Math.random() * arr3.length) | 0]; if (ge) embers.push({ bx: ge.bx, by: ge.by, hand: fromR ? 1 : 0, vx: (Math.random() - 0.5) * 14, vy: -(24 + Math.random() * 34), age: 0, life: 1300 + Math.random() * 900, ch: randGlyph((Math.random() * 9999) | 0) }); }
+      ctx.fillStyle = EMBER_COLOR;
+      for (var ek = embers.length - 1; ek >= 0; ek--) { var e = embers[ek]; e.age += dt; if (e.age >= e.life) { embers.splice(ek, 1); continue; } var tt2 = e.age / e.life; var secs = e.age / 1000; ctx.globalAlpha = (1 - tt2) * 0.6; ctx.fillText(e.ch, e.bx + (e.hand ? rox : lox) + e.vx * secs, e.by + dy + e.vy * secs); }
+      ctx.globalAlpha = 1;
+      raf = requestAnimationFrame(draw);
+    }
+
+    function onMove(e) { pointer.tx = (e.clientX / window.innerWidth - 0.5) * 2; pointer.ty = (e.clientY / window.innerHeight - 0.5) * 2; }
+    var resizeTimer = 0;
+    function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(function () { build(); if (reduceMotion) draw(0); }, 150); }
+
+    build(); raf = requestAnimationFrame(draw);
+    if (!reduceMotion) window.addEventListener('pointermove', onMove);
+    window.addEventListener('resize', onResize);
+  })();
+  </script>
+</body>
+</html>
