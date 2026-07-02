@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion, cubicBezier } from "framer-motion";
 import { FiMessageCircle } from "react-icons/fi";
-import AsciiGradientBand from "./AsciiGradientBand";
+import footerPattern from "../assets/footer-pattern.svg";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);
 
@@ -73,7 +73,7 @@ export default function FooterNew() {
           <div className="relative">
             <a
               href={`/contact`}
-              aria-label="Talk to an expert"
+              aria-label="Available for work — get in touch"
               className="absolute bottom-6 right-6 w-[108px] h-[108px] rounded-full grid place-items-center"
             >
               <motion.svg
@@ -88,15 +88,13 @@ export default function FooterNew() {
                     d="M50 50 m -36 0 a 36 36 0 1 1 72 0 a 36 36 0 1 1 -72 0"
                   />
                 </defs>
-                <text
-                  fontSize="8"
-                  fill="#888"
-                  letterSpacing="2"
-                  fontWeight={600}
-                >
-                  <textPath xlinkHref="#circlePath">
-                    • FREE CONSULT • TALK TO AN EXPERT • FREE CONSULT • TALK TO
-                    AN EXPERT • 
+                <text fontSize="8" fill="#888" fontWeight={600}>
+                  <textPath
+                    xlinkHref="#circlePath"
+                    textLength="226"
+                    lengthAdjust="spacing"
+                  >
+                    AVAILABLE FOR WORK • AVAILABLE FOR WORK •
                   </textPath>
                 </text>
               </motion.svg>
@@ -111,12 +109,14 @@ export default function FooterNew() {
         {/* Circular CTA — bottom right */}
       </div>
 
-      {/* ASCII gradient accent band */}
-      <div
-        className="relative overflow-hidden border-t border-[#1a1a1a]"
-        aria-label="Get in touch email banner"
-      >
-        <AsciiGradientBand />
+      {/* African pattern accent band */}
+      <div className="relative overflow-hidden border-t border-[#1a1a1a]">
+        <img
+          src={footerPattern}
+          alt=""
+          aria-hidden="true"
+          className="block w-full h-auto select-none"
+        />
       </div>
     </footer>
   );

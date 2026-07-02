@@ -1,78 +1,322 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { motion, cubicBezier } from 'framer-motion'
+import leftArt from '../features/home/components/hand-left.txt?raw'
+import rightArt from '../features/home/components/hand-right.txt?raw'
+
+/**
+ * "Genesis" preloader — an overture to the hero. The Creation-of-Adam hands
+ * assemble from scattered crimson glyphs, the fingertips charge, a spark leaps
+ * the gap, and a light bloom lifts away to reveal the site. Because the hero
+ * renders beneath this overlay from t=0, its hands are already alive by the
+ * time the bloom clears — so the handoff is one continuous beat.
+ */
 
 const ease = cubicBezier(0.16, 1, 0.3, 1)
 
+// geometry — matched to HandOfGod so the revealed hands sit where these did
+const COLS = 80
+const COLOR = '#983520'
+const RIPPLE_COLOR = '#ff8a52'
+const SPARK_COLOR = '#ffe4c4'
+const FLASH_CORE = '#fff6ea'
+const GLYPH_RATIO = 1.2
+const PAD_TOP = 0.16
+const EDGE_BLEED = 17
+
+// choreography (ms)
+const ASSEMBLE_DUR = 1080
+const CHARGE_START = 320 // after assemble
+const CHARGE_DUR = 480
+const SPARK_START = CHARGE_START + CHARGE_DUR
+const SPARK_DUR = 640 // slow, visible bolt crossing the gap
+const IMPACT_HOLD = 150 // beat where the bolt rests on Adam's fingertip
+const FLASH_START = SPARK_START + SPARK_DUR + IMPACT_HOLD // kaboom only after contact
+const FLASH_DUR = 400
+const RIPPLE_DUR = 1000
+
+const POOL = '«»[]{}()<>/\\|;:!?+=~^-'.split('')
+
+const leftLines = leftArt.split('\n')
+const rightLines = rightArt.split('\n')
+
+function hash(i: number) {
+  return (i * 2654435761) >>> 0
+}
+
+type Hand = { cv: HTMLCanvasElement; rows: number }
+type Glyph = { ch: string; bx: number; by: number }
+
 export default function Preloader({ onComplete }: { onComplete: () => void }) {
-  const [progress, setProgress] = useState(0)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const onCompleteRef = useRef(onComplete)
-  onCompleteRef.current = onComplete
+  useEffect(() => {
+    onCompleteRef.current = onComplete
+  })
 
   useEffect(() => {
-    let frame: number
-    let start: number
-    const duration = 1800
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
 
-    const tick = (timestamp: number) => {
-      if (!start) start = timestamp
-      const elapsed = timestamp - start
-      const next = Math.min(100, Math.round((elapsed / duration) * 100))
-      setProgress(next)
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let dpr = 1
+    let cell = 8
+    let W = 0
+    let H = 0
+    let left: Hand | null = null
+    let right: Hand | null = null
+    let glyphsL: Glyph[] = []
+    let glyphsR: Glyph[] = []
+    let tipGlyphsL: Glyph[] = []
+    let tipGlyphsR: Glyph[] = []
+    let godTipX = 0
+    let godTipY = 0
+    let adamTipX = 0
+    let adamTipY = 0
+    let maxDist = 1
+    let raf = 0
+    let start = 0
+    let done = false
 
-      if (next < 100) {
-        frame = requestAnimationFrame(tick)
-      } else {
-        setTimeout(() => onCompleteRef.current(), 500)
+    const randGlyph = (seed: number) => POOL[hash(seed) % POOL.length]
+
+    function buildHand(lines: string[]): Hand {
+      const rows = lines.length
+      const cv = document.createElement('canvas')
+      cv.width = Math.ceil(COLS * cell * dpr)
+      cv.height = Math.ceil(rows * cell * dpr)
+      const c = cv.getContext('2d')!
+      c.scale(dpr, dpr)
+      c.font = `${(cell * GLYPH_RATIO).toFixed(2)}px "Courier New", monospace`
+      c.textAlign = 'center'
+      c.textBaseline = 'middle'
+      c.fillStyle = COLOR
+      for (let r = 0; r < rows; r++) {
+        const line = lines[r]
+        for (let col = 0; col < Math.min(COLS, line.length); col++) {
+          if (line[col] !== ' ') c.fillText(line[col], col * cell + cell / 2, r * cell + cell / 2)
+        }
       }
+      return { cv, rows }
     }
 
-    // Start counting after name reveals
-    const timeout = setTimeout(() => {
-      frame = requestAnimationFrame(tick)
-    }, 900)
+    function originY(rows: number) {
+      return (H + PAD_TOP * H - rows * cell) / 2
+    }
+
+    function collect(lines: string[], x0: number): Glyph[] {
+      const oy = originY(lines.length)
+      const out: Glyph[] = []
+      for (let r = 0; r < lines.length; r++) {
+        const line = lines[r]
+        for (let col = 0; col < Math.min(COLS, line.length); col++) {
+          if (line[col] !== ' ') out.push({ ch: line[col], bx: x0 + col * cell + cell / 2, by: oy + r * cell + cell / 2 })
+        }
+      }
+      return out
+    }
+
+    function build() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2)
+      W = window.innerWidth
+      H = window.innerHeight
+      cell = Math.max(6, Math.min(W * 0.0057, 11))
+      canvas!.width = Math.ceil(W * dpr)
+      canvas!.height = Math.ceil(H * dpr)
+      canvas!.style.width = `${W}px`
+      canvas!.style.height = `${H}px`
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx!.font = `${(cell * GLYPH_RATIO).toFixed(2)}px "Courier New", monospace`
+      ctx!.textAlign = 'center'
+      ctx!.textBaseline = 'middle'
+      left = buildHand(leftLines)
+      right = buildHand(rightLines)
+
+      const lw = COLS * cell
+      glyphsL = collect(leftLines, 0)
+      glyphsR = collect(rightLines, W - lw)
+      adamTipX = -Infinity
+      for (const g of glyphsL) if (g.bx > adamTipX) { adamTipX = g.bx; adamTipY = g.by }
+      godTipX = Infinity
+      for (const g of glyphsR) if (g.bx < godTipX) { godTipX = g.bx; godTipY = g.by }
+      // the blast originates where the bolt lands — Adam's fingertip
+      maxDist = 1
+      for (const g of glyphsL) { const d = Math.hypot(g.bx - adamTipX, g.by - adamTipY); if (d > maxDist) maxDist = d }
+      for (const g of glyphsR) { const d = Math.hypot(g.bx - adamTipX, g.by - adamTipY); if (d > maxDist) maxDist = d }
+      const near = cell * 4.5
+      tipGlyphsL = glyphsL.filter((g) => Math.hypot(g.bx - adamTipX, g.by - adamTipY) < near)
+      tipGlyphsR = glyphsR.filter((g) => Math.hypot(g.bx - godTipX, g.by - godTipY) < near)
+    }
+
+    const lox = -EDGE_BLEED
+    const rox = EDGE_BLEED
+
+    function finish() {
+      if (done) return
+      done = true
+      onCompleteRef.current()
+    }
+
+    function draw(now: number) {
+      if (!start) start = now
+      const elapsed = now - start
+      ctx!.clearRect(0, 0, W, H)
+      if (!left || !right) { raf = requestAnimationFrame(draw); return }
+
+      const lw = COLS * cell
+      const oyL = originY(left.rows)
+      const oyR = originY(right.rows)
+
+      if (reduceMotion) {
+        ctx!.drawImage(left.cv, lox, oyL, lw, left.rows * cell)
+        ctx!.drawImage(right.cv, W - lw + rox, oyR, lw, right.rows * cell)
+        if (elapsed > 650) finish()
+        raf = requestAnimationFrame(draw)
+        return
+      }
+
+      // --- 1. assemble: decode out of noise ---
+      if (elapsed < ASSEMBLE_DUR) {
+        const p = elapsed / ASSEMBLE_DUR
+        ctx!.fillStyle = COLOR
+        const decode = (arr: Glyph[], ox: number) => {
+          for (let i = 0; i < arr.length; i++) {
+            const g = arr[i]
+            const rv = (hash(i) % 1000) / 1000 * 0.6
+            const local = (p - rv) / 0.4
+            let ch: string
+            let a: number
+            if (local <= 0) { ch = randGlyph(i + ((now / 70) | 0)); a = 0.14 }
+            else if (local < 1) { ch = local < 0.65 ? randGlyph(i + ((now / 50) | 0)) : g.ch; a = 0.14 + local * 0.86 }
+            else { ch = g.ch; a = 1 }
+            ctx!.globalAlpha = a
+            ctx!.fillText(ch, g.bx + ox, g.by)
+          }
+        }
+        decode(glyphsL, lox)
+        decode(glyphsR, rox)
+        ctx!.globalAlpha = 1
+        raf = requestAnimationFrame(draw)
+        return
+      }
+
+      const post = elapsed - ASSEMBLE_DUR
+
+      // --- base hands ---
+      ctx!.drawImage(left.cv, lox, oyL, lw, left.rows * cell)
+      ctx!.drawImage(right.cv, W - lw + rox, oyR, lw, right.rows * cell)
+
+      // --- 2. charge: only God's fingertips flare, building the shot ---
+      if (post >= CHARGE_START && post < CHARGE_START + CHARGE_DUR) {
+        const ci = (post - CHARGE_START) / CHARGE_DUR
+        const flick = 0.6 + 0.4 * Math.abs(Math.sin(now / 40))
+        ctx!.fillStyle = SPARK_COLOR
+        for (const g of tipGlyphsR) { ctx!.globalAlpha = ci * flick; ctx!.fillText(g.ch, g.bx + rox, g.by) }
+        ctx!.globalAlpha = 1
+      }
+
+      // --- 3. spark: God's fingertip fires a bolt across the gap ---
+      const sp = post - SPARK_START
+      if (sp >= 0 && sp < SPARK_DUR) {
+        const head = sp / SPARK_DUR
+        const gx = godTipX + rox
+        const gy = godTipY
+        const ax = adamTipX + lox
+        const ay = adamTipY
+        const steps = Math.max(2, Math.round(Math.hypot(ax - gx, ay - gy) / cell))
+        ctx!.fillStyle = SPARK_COLOR
+        for (let i = 0; i <= steps; i++) {
+          const u = i / steps
+          if (u > head) break
+          const behind = head - u
+          if (behind > 0.4) continue
+          ctx!.globalAlpha = 1 - behind / 0.4
+          ctx!.fillText(behind < 0.08 ? '*' : '=', gx + (ax - gx) * u, gy + (ay - gy) * u)
+        }
+        ctx!.globalAlpha = 1
+      }
+
+      // --- 3b. impact: the bolt rests on Adam's fingertip, glowing, before the blast ---
+      if (sp >= SPARK_DUR && post < FLASH_START) {
+        const pulse = 0.6 + 0.4 * Math.abs(Math.sin(now / 45))
+        ctx!.fillStyle = SPARK_COLOR
+        for (const g of tipGlyphsL) { ctx!.globalAlpha = pulse; ctx!.fillText(g.ch, g.bx + lox, g.by) }
+        ctx!.globalAlpha = pulse
+        ctx!.fillText('*', adamTipX + lox, adamTipY)
+        ctx!.globalAlpha = 1
+      }
+
+      // --- 4. KABOOM: ripple + light bloom bursting from Adam's fingertip, then lift away ---
+      const fl = post - FLASH_START
+      if (fl >= 0) {
+        const exX = adamTipX + lox
+        const exY = adamTipY
+        // ripple ring bursting outward through both hands
+        if (fl < RIPPLE_DUR) {
+          const rp = fl / RIPPLE_DUR
+          const radius = rp * maxDist
+          const band = cell * 7
+          const tail = 1 - rp * 0.55
+          ctx!.fillStyle = RIPPLE_COLOR
+          const paint = (arr: Glyph[], ox: number) => {
+            for (const g of arr) {
+              const dd = Math.abs(Math.hypot(g.bx - adamTipX, g.by - adamTipY) - radius)
+              if (dd < band) {
+                ctx!.globalAlpha = (1 - dd / band) * tail
+                ctx!.fillText(g.ch, g.bx + ox, g.by)
+              }
+            }
+          }
+          paint(glyphsL, lox)
+          paint(glyphsR, rox)
+          ctx!.globalAlpha = 1
+        }
+        // light bloom
+        const fp = Math.min(1, fl / FLASH_DUR)
+        const eased = fp * fp
+        const R = eased * Math.hypot(W, H) * 0.85
+        const grad = ctx!.createRadialGradient(exX, exY, 0, exX, exY, Math.max(1, R))
+        grad.addColorStop(0, FLASH_CORE)
+        grad.addColorStop(0.55, `rgba(255,228,196,${0.9 * fp})`)
+        grad.addColorStop(1, 'rgba(152,53,32,0)')
+        ctx!.globalAlpha = Math.min(1, fp * 1.2)
+        ctx!.fillStyle = grad
+        ctx!.beginPath()
+        ctx!.arc(exX, exY, Math.max(1, R), 0, Math.PI * 2)
+        ctx!.fill()
+        ctx!.globalAlpha = 1
+        if (fp >= 1) { finish(); return }
+      }
+
+      raf = requestAnimationFrame(draw)
+    }
+
+    let resizeTimer = 0
+    function onResize() {
+      window.clearTimeout(resizeTimer)
+      resizeTimer = window.setTimeout(build, 150)
+    }
+
+    build()
+    raf = requestAnimationFrame(draw)
+    window.addEventListener('resize', onResize)
 
     return () => {
-      clearTimeout(timeout)
-      cancelAnimationFrame(frame)
+      cancelAnimationFrame(raf)
+      window.clearTimeout(resizeTimer)
+      window.removeEventListener('resize', onResize)
     }
   }, [])
 
   return (
     <motion.div
-      className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center"
-      exit={{ y: '-100%' }}
-      transition={{ duration: 0.8, ease }}
+      className="fixed inset-0 z-[9999] bg-black"
+      style={{ transformOrigin: '50% 42%' }}
+      exit={{ opacity: 0, scale: 1.16 }}
+      transition={{ duration: 0.7, ease }}
     >
-      {/* Name — text mask reveal */}
-      <div className="overflow-hidden">
-        <motion.h1
-          className="text-[clamp(1.5rem,4vw,3rem)] font-extrabold tracking-[-0.04em] uppercase text-off-white"
-          initial={{ y: '100%' }}
-          animate={{ y: '0%' }}
-          transition={{ duration: 0.8, delay: 0.2, ease }}
-        >
-          Ifeoluwase
-        </motion.h1>
-      </div>
-
-      {/* Progress bar + counter */}
-      <motion.div
-        className="mt-8 flex flex-col items-center gap-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.7 }}
-      >
-        <div className="w-48 h-[1px] bg-[#222] relative overflow-hidden">
-          <motion.div
-            className="absolute inset-y-0 left-0 bg-off-white"
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.05 }}
-          />
-        </div>
-        <span className="text-[0.625rem] font-medium tracking-[0.25em] text-[#444] tabular-nums">
-          {progress}%
-        </span>
-      </motion.div>
+      <canvas ref={canvasRef} className="absolute inset-0" aria-hidden="true" />
     </motion.div>
   )
 }

@@ -4,6 +4,7 @@ import ExpandLine from "../../../components/ExpandLine";
 import RevealWords from "../../../components/RevealWords";
 import { site } from "../../../config/site";
 import meImg from "../../../assets/me.png";
+import { FiDownload, FiArrowUpRight } from "react-icons/fi";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);
 
@@ -55,9 +56,11 @@ export default function Bio() {
               <span className="text-[0.75rem] font-semibold tracking-[0.15em] uppercase text-black border-b border-black pb-1 transition-colors duration-200 group-hover:text-gray-dark group-hover:border-gray-dark">
                 More about me
               </span>
-              <span className="text-black text-lg transition-transform duration-300 group-hover:translate-x-1.5">
-                &rarr;
-              </span>
+              <FiArrowUpRight
+                size={18}
+                className="text-black transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
             </Link>
             <div className="h-3" />
             <a
@@ -69,9 +72,11 @@ export default function Bio() {
               <span className="text-[0.75rem] font-semibold tracking-[0.15em] uppercase text-black border-b border-black pb-1 transition-colors duration-200 group-hover:text-gray-dark group-hover:border-gray-dark">
                 Download resume
               </span>
-              <span className="text-black text-lg transition-transform duration-300 group-hover:translate-x-1.5">
-                ↗
-              </span>
+              <FiDownload
+                size={17}
+                className="text-black transition-transform duration-300 group-hover:translate-y-0.5"
+                aria-hidden="true"
+              />
             </a>
           </motion.div>
         </div>

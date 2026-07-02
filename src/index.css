@@ -11,10 +11,10 @@
   --color-olive-600: #465046;
   --color-mint-200: #dfe8d1;
 
-  --default-font-family: 'Outfit', -apple-system, 'Helvetica Neue', Arial,
+  --default-font-family: 'Outfit Variable', -apple-system, 'Helvetica Neue', Arial,
     sans-serif;
-  --font-sans: 'Outfit', -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  --font-heading: 'Big Shoulders Display', sans-serif;
+  --font-sans: 'Outfit Variable', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: 'Big Shoulders Display Variable', sans-serif;
 
   --breakpoint-sm: 600px;
   --breakpoint-lg: 900px;

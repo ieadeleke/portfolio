@@ -1,22 +1,25 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
 
 /**
- * GossipEye — a nosy pair of eyes that stay hidden while you browse. If you go
- * idle without scrolling, they peek into the corner, dart around, throw the odd
- * wink, and drop Joey's "How you doin'?" Any scroll (or a click) sends them away
- * and re-arms. First nudge at 5s, then every 10s.
+ * GossipEye — a nosy pair of eyes parked in the corner. They stay watching the
+ * whole time (darting, blinking, the odd wink), and only duck away while you're
+ * scrolling — popping back a beat after you stop.
  */
-const FIRST_MS = 5000
-const REPEAT_MS = 10000
+const HIDE_AFTER_SCROLL_MS = 600
+const GAZE_MAX_X = 5 // pupil deflection range within the sclera
+const GAZE_MAX_Y = 8
+const GAZE_IDLE_MS = 1400 // mouse-still time before the eyes go back to wandering
 
 type Expr = 'open' | 'blink' | 'wink'
 
 export default function GossipEye() {
-  const [awake, setAwake] = useState(false)
+  const [awake, setAwake] = useState(true)
   const [expr, setExpr] = useState<Expr>('open')
   const timer = useRef<number>(0)
-  const hasShown = useRef(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const following = useRef(false)
+  const followTimer = useRef<number>(0)
 
   // shared gaze offset (both pupils look the same way)
   const gx = useSpring(useMotionValue(0), { stiffness: 140, damping: 15 })
@@ -28,28 +31,45 @@ export default function GossipEye() {
   const rcx = useTransform(gx, (v) => 46 + v - 1.8)
   const ccy = useTransform(gy, (v) => 20 + v - 1.8)
 
-  const startTimer = useCallback(() => {
-    window.clearTimeout(timer.current)
-    timer.current = window.setTimeout(() => {
-      hasShown.current = true
-      setAwake(true)
-    }, hasShown.current ? REPEAT_MS : FIRST_MS)
-  }, [])
-
-  const arm = useCallback(() => {
-    setAwake(false)
-    setExpr('open')
-    startTimer()
-  }, [startTimer])
-
+  // hide while scrolling, then pop back a beat after it stops
   useEffect(() => {
-    startTimer()
-    window.addEventListener('scroll', arm, { passive: true })
+    const onScroll = () => {
+      setAwake(false)
+      window.clearTimeout(timer.current)
+      timer.current = window.setTimeout(() => setAwake(true), HIDE_AFTER_SCROLL_MS)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => {
       window.clearTimeout(timer.current)
-      window.removeEventListener('scroll', arm)
+      window.removeEventListener('scroll', onScroll)
     }
-  }, [arm, startTimer])
+  }, [])
+
+  // follow the cursor while it's moving; hand back to autonomous darting when still
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      const el = containerRef.current
+      if (!el) return
+      const r = el.getBoundingClientRect()
+      const cx = r.left + r.width / 2
+      const cy = r.top + r.height / 2
+      const dx = e.clientX - cx
+      const dy = e.clientY - cy
+      const len = Math.hypot(dx, dy) || 1
+      gx.set((dx / len) * GAZE_MAX_X)
+      gy.set((dy / len) * GAZE_MAX_Y)
+      following.current = true
+      window.clearTimeout(followTimer.current)
+      followTimer.current = window.setTimeout(() => {
+        following.current = false
+      }, GAZE_IDLE_MS)
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      window.clearTimeout(followTimer.current)
+    }
+  }, [gx, gy])
 
   // dart the eyeballs + blink/wink while awake
   useEffect(() => {
@@ -59,6 +79,7 @@ export default function GossipEye() {
       return
     }
     const dart = window.setInterval(() => {
+      if (following.current) return // cursor has the wheel
       gx.set(-5 + Math.random() * 10)
       gy.set(-8 + Math.random() * 16)
     }, 850)
@@ -80,14 +101,13 @@ export default function GossipEye() {
     <AnimatePresence>
       {awake && (
         <motion.div
-          className="fixed bottom-8 right-8 z-50 flex cursor-pointer items-end gap-2.5 max-sm:bottom-4 max-sm:right-4"
+          ref={containerRef}
+          className="pointer-events-none fixed bottom-8 right-8 z-50 flex items-end gap-2.5 max-sm:bottom-4 max-sm:right-4"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 24 }}
           transition={{ duration: 0.3 }}
-          onClick={arm}
-          role="button"
-          aria-label="Dismiss"
+          aria-hidden="true"
         >
           {/* eyes */}
           <svg

@@ -8,6 +8,7 @@ import Preloader from './components/Preloader'
 import PageMeta from './components/PageMeta'
 import EpisodeTransition from './components/EpisodeTransition'
 import GossipEye from './components/GossipEye'
+import { RevealContext } from './context/reveal'
 import HomePage from './features/home/HomePage'
 import AboutPage from './features/about/AboutPage'
 import ProjectsPage from './features/projects/ProjectsPage'
@@ -35,6 +36,7 @@ function AnimatedRoutes() {
 
 function App() {
   const [showPreloader, setShowPreloader] = useState(true)
+  const [revealed, setRevealed] = useState(false)
 
   // Smooth scroll — Lenis
   useEffect(() => {
@@ -65,7 +67,10 @@ function App() {
         {showPreloader && (
           <Preloader
             key="preloader"
-            onComplete={() => setShowPreloader(false)}
+            onComplete={() => {
+              setShowPreloader(false)
+              setRevealed(true)
+            }}
           />
         )}
       </AnimatePresence>
@@ -73,7 +78,9 @@ function App() {
       <ScrollToTop />
       <EpisodeTransition />
       <Nav />
-      <AnimatedRoutes />
+      <RevealContext.Provider value={revealed}>
+        <AnimatedRoutes />
+      </RevealContext.Provider>
       <GossipEye />
     </>
   )

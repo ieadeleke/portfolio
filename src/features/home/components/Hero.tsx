@@ -1,11 +1,13 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, cubicBezier } from 'framer-motion'
 import HandOfGod from './HandOfGod'
+import { useRevealed } from '../../../context/reveal'
 
 
 const ease = cubicBezier(0.16, 1, 0.3, 1)
 
 export default function Hero() {
+  const revealed = useRevealed()
   const heroRef = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -24,8 +26,8 @@ export default function Hero() {
         >
           <motion.div
             initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.9, ease }}
+            animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            transition={{ duration: 1.1, delay: 0.15, ease }}
           >
             <p className="text-[0.6875rem] font-medium tracking-[0.12em] uppercase text-white/50">
               Based in Lagos, NG
@@ -33,8 +35,8 @@ export default function Hero() {
           </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 1, ease }}
+            animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            transition={{ duration: 1.1, delay: 0.28, ease }}
           >
             <p className="text-[0.6875rem] font-medium tracking-[0.12em] uppercase text-white/50">
               Scroll &darr;
@@ -43,7 +45,12 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      <div className="relative z-[1] border-t border-white/10 overflow-hidden">
+      <motion.div
+        className="relative z-[1] border-t border-white/10 overflow-hidden"
+        initial={{ opacity: 0, y: 24 }}
+        animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+        transition={{ duration: 1, delay: 0.4, ease }}
+      >
         <motion.div
           className="flex whitespace-nowrap py-[clamp(14px,2vw,20px)]"
           animate={{ x: ['0%', '-50%'] }}
@@ -66,7 +73,7 @@ export default function Hero() {
             </div>
           ))}
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   )
 }

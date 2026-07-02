@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, cubicBezier } from 'framer-motion'
 import { site } from '../config/site'
+import logoMark from '../assets/logo-mark.svg'
 
 const ease = cubicBezier(0.16, 1, 0.3, 1)
 
@@ -32,8 +33,16 @@ export default function Nav() {
     <>
       {/* Top bar — always visible */}
       <div className="fixed top-0 left-0 right-0 z-[130] flex items-center justify-between px-[clamp(24px,5vw,80px)] py-5">
-        <Link to="/" className="text-lg font-semibold tracking-[-0.01em] text-off-white">
-          {site.name}
+        <Link to="/" className="group flex items-center gap-2.5">
+          <img
+            src={logoMark}
+            alt=""
+            aria-hidden="true"
+            className="h-6 w-auto opacity-90 transition-opacity duration-300 group-hover:opacity-100 select-none"
+          />
+          <span className="text-lg font-semibold tracking-[-0.01em] text-off-white">
+            {site.name}
+          </span>
         </Link>
         <button
           ref={btnRef}
