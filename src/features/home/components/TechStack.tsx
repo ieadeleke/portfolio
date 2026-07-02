@@ -24,7 +24,7 @@ export default function TechStack() {
       <div className="max-w-[1400px] mx-auto">
         <div className="flex items-end justify-between mb-[clamp(2rem,4vw,3.5rem)]">
           <motion.p
-            className="text-[0.6875rem] font-semibold tracking-[0.15em] uppercase text-gray"
+            className="text-[0.6875rem] font-semibold tracking-[0.15em] uppercase text-[#983520]"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-60px' }}
@@ -39,7 +39,7 @@ export default function TechStack() {
                 type="button"
                 onClick={() => setActive(i)}
                 className={`w-2 h-2 rounded-full transition-colors duration-300 cursor-pointer ${
-                  active === i ? 'bg-black' : 'bg-[#bbb]'
+                  active === i ? 'bg-[#983520]' : 'bg-[#bbb]'
                 }`}
                 aria-label={`Panel ${i + 1}`}
               />
@@ -69,7 +69,7 @@ export default function TechStack() {
                 >
                   <motion.span
                     className="text-[0.8125rem] font-medium tracking-[0.08em] uppercase text-gray-dark cursor-default select-none"
-                    whileHover={{ scale: 1.15, color: '#0a0a0a' }}
+                    whileHover={{ scale: 1.15, color: '#983520' }}
                     transition={{ duration: 0.2 }}
                   >
                     {tech}

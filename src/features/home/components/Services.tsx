@@ -7,6 +7,10 @@ import {
   cubicBezier,
 } from "framer-motion";
 import ExpandLine from "../../../components/ExpandLine";
+import feImg from "../../../assets/fe.png";
+import beImg from "../../../assets/be.png";
+import articleImg from "../../../assets/article.png";
+import teachImg from "../../../assets/teach.jpeg";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);
 
@@ -14,27 +18,32 @@ const serviceData = [
   {
     title: "Frontend Development",
     desc: "Building fast, accessible interfaces with modern frameworks and performance-focused architecture.",
-    gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    image: feImg,
+    accent: "#1a0533",
   },
   {
     title: "Backend & APIs",
     desc: "Designing scalable backend systems, clean APIs, and reliable data layers for modern web applications.",
-    gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+    image: beImg,
+    accent: "#021a12",
   },
-  {
-    title: "Full-Stack Development",
-    desc: "Developing complete products end-to-end — from polished interfaces to resilient backend services.",
-    gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-  },
+  // {
+  //   title: "Full-Stack Development",
+  //   desc: "Developing complete products end-to-end — from polished interfaces to resilient backend services.",
+  //   image: null,
+  //   accent: "",
+  // },
   {
     title: "Technical Writing",
     desc: "Sharing practical engineering insights through articles that help developers learn and build better systems.",
-    gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+    image: articleImg,
+    accent: "#1a0a00",
   },
   {
     title: "Teaching & Mentorship",
     desc: "Helping developers grow through practical sessions and real-world software engineering guidance.",
-    gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+    image: teachImg,
+    accent: "#020d1a",
   },
 ];
 
@@ -81,23 +90,44 @@ function ServiceRow({
         <AnimatePresence>
           {isHovered && (
             <motion.div
-              className="fixed z-50 w-[280px] h-[190px] rounded-lg pointer-events-none max-lg:hidden"
+              className="fixed z-50 w-[300px] pointer-events-none max-lg:hidden"
               style={{
                 left: springX,
                 top: springY,
                 x: "-50%",
-                y: "-110%",
-                background: service.gradient,
+                y: "-115%",
+                rotate: -3,
               }}
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 0.95, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.6 }}
+              initial={{ opacity: 0, scale: 0.8, rotate: -6 }}
+              animate={{ opacity: 1, scale: 1, rotate: -3 }}
+              exit={{ opacity: 0, scale: 0.8, rotate: -6 }}
               transition={{ duration: 0.3, ease }}
-            />
+            >
+              {/* Browser chrome */}
+              <div className="rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10 bg-[#1a1a1a]">
+                <div className="flex items-center gap-1.5 px-3 py-2.5 border-b border-white/[0.06]">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+                  <div className="flex-1 mx-2 bg-[#2a2a2a] rounded px-2 py-0.5">
+                    <p className="text-[0.5rem] text-white/30 tracking-wide truncate">
+                      ife.dev/{service.title.toLowerCase().replace(/\s+&?\s*/g, "-")}
+                    </p>
+                  </div>
+                </div>
+                <div style={{ backgroundColor: service.accent }} className="p-4">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full block"
+                  />
+                </div>
+              </div>
+            </motion.div>
           )}
         </AnimatePresence>
 
-        <span className="text-[0.625rem] font-medium tracking-[0.1em] text-[#333] tabular-nums shrink-0 pt-1.5">
+        <span className="text-[0.625rem] font-medium tracking-[0.1em] text-[#983520] tabular-nums shrink-0 pt-1.5">
           {String(index + 1).padStart(2, "0")}
         </span>
         <div className="flex items-start justify-between gap-[clamp(20px,4vw,60px)] w-full max-md:flex-col max-md:gap-3">
@@ -138,8 +168,8 @@ export default function Services() {
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.6, ease }}
         >
-          <ExpandLine className="bg-[#333] w-12" />
-          <p className="text-[0.6875rem] font-semibold tracking-[0.15em] uppercase text-[#555]">
+          <ExpandLine className="bg-[#983520] w-12" />
+          <p className="text-[0.6875rem] font-semibold tracking-[0.15em] uppercase text-[#983520]">
             What I Do
           </p>
         </motion.div>

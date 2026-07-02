@@ -1,27 +1,9 @@
-import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, cubicBezier } from "framer-motion";
 import { FiMessageCircle } from "react-icons/fi";
+import AsciiGradientBand from "./AsciiGradientBand";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);
-
-function Badge({ label }: { label: string }) {
-  return (
-    <div className="flex items-center justify-center h-24 min-w-[140px] rounded-sm border border-[#1a1a1a] bg-[#0e0e0e] px-4">
-      <div className="text-center leading-tight">
-        <p className="text-[0.85rem] font-extrabold uppercase tracking-[0.08em] text-off-white">
-          Clutch
-        </p>
-        <p className="text-[0.625rem] uppercase tracking-[0.12em] text-[#aaa]">
-          {label}
-        </p>
-        <p className="text-[0.625rem] uppercase tracking-[0.12em] text-[#666]">
-          2024
-        </p>
-      </div>
-    </div>
-  );
-}
 
 export default function FooterNew() {
   const email = "hello@ifeoluwase.dev";
@@ -77,7 +59,7 @@ export default function FooterNew() {
                 </a>
               </div>
 
-              <div className="mt-4">
+              {/* <div className="mt-4">
                 <p className="text-[0.625rem] font-semibold tracking-[0.15em] uppercase text-[#555] mb-2">Navigation</p>
                 <ul className="flex gap-4 flex-wrap text-[0.75rem] text-[#777]">
                   <li><Link to="/" className="hover:text-off-white transition-colors">Home</Link></li>
@@ -85,7 +67,7 @@ export default function FooterNew() {
                   <li><Link to="/about" className="hover:text-off-white transition-colors">About</Link></li>
                   <li><Link to="/contact" className="hover:text-off-white transition-colors">Contact</Link></li>
                 </ul>
-              </div>
+              </div> */}
             </motion.div>
           </div>
           <div className="relative">
@@ -114,7 +96,7 @@ export default function FooterNew() {
                 >
                   <textPath xlinkHref="#circlePath">
                     • FREE CONSULT • TALK TO AN EXPERT • FREE CONSULT • TALK TO
-                    AN EXPERT
+                    AN EXPERT • 
                   </textPath>
                 </text>
               </motion.svg>
@@ -129,63 +111,13 @@ export default function FooterNew() {
         {/* Circular CTA — bottom right */}
       </div>
 
-      {/* Big gradient email band */}
+      {/* ASCII gradient accent band */}
       <div
         className="relative overflow-hidden border-t border-[#1a1a1a]"
         aria-label="Get in touch email banner"
       >
-        <div
-          className="w-full py-2"
-          style={{
-            background:
-              "linear-gradient(90deg, #ff6a45 0%, #ff493f 45%, #ff3b5c 100%)",
-          }}
-        ></div>
+        <AsciiGradientBand />
       </div>
     </footer>
-  );
-}
-
-function FitEmail({ text }: { text: string }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLSpanElement>(null);
-  const [scale, setScale] = useState(1);
-
-  useEffect(() => {
-    const measure = () => {
-      const c = containerRef.current;
-      const t = textRef.current;
-      if (!c || !t) return;
-      t.style.transform = "scale(1)";
-      const cw = c.clientWidth;
-      const tw = t.scrollWidth;
-      const next = cw > 0 ? Math.min(1, cw / tw) : 1;
-      setScale(next);
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    if (containerRef.current) ro.observe(containerRef.current);
-    window.addEventListener("resize", measure);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, []);
-
-  return (
-    <div ref={containerRef} className="w-full overflow-hidden">
-      <span
-        ref={textRef}
-        className="inline-block font-extrabold uppercase tracking-[-0.04em] text-black whitespace-nowrap leading-[0.9]"
-        style={{
-          fontFamily: "var(--font-heading)",
-          fontSize: "clamp(3rem,12vw,10rem)",
-          transform: `scale(${scale})`,
-          transformOrigin: "left center",
-        }}
-      >
-        {text}
-      </span>
-    </div>
   );
 }

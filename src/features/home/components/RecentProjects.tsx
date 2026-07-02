@@ -78,10 +78,10 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
       <div className="pt-[clamp(12px,1.5vw,20px)]">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-baseline gap-[clamp(8px,1vw,14px)]">
-            <span className="text-[0.625rem] font-medium tracking-[0.1em] text-[#555] tabular-nums shrink-0">
+            <span className="text-[0.625rem] font-medium tracking-[0.1em] text-[#983520] tabular-nums shrink-0">
               {String(index + 1).padStart(2, '0')}
             </span>
-            <h3 className="text-[clamp(1.25rem,2.2vw,2rem)] font-extrabold tracking-[-0.03em] leading-none uppercase text-off-white transition-colors duration-300 group-hover:text-[#777]">
+            <h3 className="text-[clamp(1.25rem,2.2vw,2rem)] font-extrabold tracking-[-0.03em] leading-none uppercase text-off-white transition-colors duration-300 group-hover:text-[#c9542f]">
               {project.title}
             </h3>
           </div>
@@ -93,7 +93,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
           <span className="text-[0.75rem] font-medium tracking-[0.08em] uppercase text-[#555]">
             {project.category}
           </span>
-          <span className="w-1 h-1 rounded-full bg-[#333]" />
+          <span className="w-1 h-1 rounded-full bg-[#983520]" />
           <span className="text-[0.75rem] font-normal text-[#555]">
             {project.type}
           </span>
@@ -105,7 +105,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
 
 export default function RecentProjects() {
   return (
-    <section className="bg-black py-[clamp(60px,8vw,120px)] px-[clamp(24px,5vw,80px)]">
+    <section className="bg-black pb-[clamp(30px,4vw,120px)] px-[clamp(24px,5vw,80px)]">
       <div className="max-w-[1400px] mx-auto">
         <motion.div
           className="flex items-end justify-between mb-[clamp(2rem,4vw,3.5rem)]"
@@ -114,12 +114,12 @@ export default function RecentProjects() {
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.8, ease }}
         >
-          <p className="text-[0.6875rem] font-semibold tracking-[0.15em] uppercase text-[#555]">
+          <p className="text-[0.6875rem] font-semibold tracking-[0.15em] uppercase text-[#983520]">
             Recent Projects
           </p>
           <Link
             to="/projects"
-            className="text-[0.75rem] font-semibold tracking-[0.15em] uppercase text-[#555] border-b border-[#333] pb-1 transition-colors duration-200 hover:text-off-white hover:border-off-white"
+            className="text-[0.75rem] font-semibold tracking-[0.15em] uppercase text-[#555] border-b border-[#333] pb-1 transition-colors duration-200 hover:text-[#c9542f] hover:border-[#983520]"
           >
             View all &rarr;
           </Link>

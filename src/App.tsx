@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion, cubicBezier } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import Lenis from 'lenis'
 import Nav from './components/Nav'
 import CustomCursor from './components/CustomCursor'
 import Preloader from './components/Preloader'
 import PageMeta from './components/PageMeta'
+import EpisodeTransition from './components/EpisodeTransition'
+import GossipEye from './components/GossipEye'
 import HomePage from './features/home/HomePage'
 import AboutPage from './features/about/AboutPage'
 import ProjectsPage from './features/projects/ProjectsPage'
@@ -19,26 +21,15 @@ function ScrollToTop() {
   return null
 }
 
-const pageTransition = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.3, ease: cubicBezier(0.16, 1, 0.3, 1) },
-}
-
 function AnimatedRoutes() {
   const location = useLocation()
   return (
-    <AnimatePresence mode="wait">
-      <motion.div key={location.pathname} {...pageTransition}>
-        <Routes location={location}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-        </Routes>
-      </motion.div>
-    </AnimatePresence>
+    <Routes location={location}>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/projects" element={<ProjectsPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+    </Routes>
   )
 }
 
@@ -80,8 +71,10 @@ function App() {
       </AnimatePresence>
       <CustomCursor />
       <ScrollToTop />
+      <EpisodeTransition />
       <Nav />
       <AnimatedRoutes />
+      <GossipEye />
     </>
   )
 }

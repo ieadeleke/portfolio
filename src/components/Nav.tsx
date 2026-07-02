@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, cubicBezier } from 'framer-motion'
 import { site } from '../config/site'
@@ -13,17 +13,32 @@ const links = [
 
 export default function Nav() {
   const [open, setOpen] = useState(false)
+  const btnRef = useRef<HTMLButtonElement>(null)
+  const [origin, setOrigin] = useState({ x: 0, y: 0 })
+
+  const toggle = () => {
+    const r = btnRef.current?.getBoundingClientRect()
+    if (r) setOrigin({ x: r.left + r.width / 2, y: r.top + r.height / 2 })
+    setOpen((o) => !o)
+  }
+
+  // on a link click the episode roll covers the screen; keep the menu covering
+  // until it has (≈ the roll's cover time) then close behind it — no clashing circles
+  const handleNavigate = () => {
+    window.setTimeout(() => setOpen(false), 680)
+  }
 
   return (
     <>
       {/* Top bar — always visible */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-[clamp(24px,5vw,80px)] py-5">
-        <Link to="/" className="text-sm font-semibold tracking-[-0.01em] text-off-white">
+      <div className="fixed top-0 left-0 right-0 z-[130] flex items-center justify-between px-[clamp(24px,5vw,80px)] py-5">
+        <Link to="/" className="text-lg font-semibold tracking-[-0.01em] text-off-white">
           {site.name}
         </Link>
         <button
+          ref={btnRef}
           type="button"
-          onClick={() => setOpen(!open)}
+          onClick={toggle}
           className="flex flex-col gap-[6px] w-7 cursor-pointer"
           aria-label={open ? 'Close menu' : 'Open menu'}
         >
@@ -44,11 +59,11 @@ export default function Nav() {
       <AnimatePresence>
         {open && (
           <motion.nav
-            className="fixed inset-0 z-40 bg-black/95 backdrop-blur-sm flex"
-            initial={{ clipPath: 'circle(0% at calc(100% - 56px) 28px)' }}
-            animate={{ clipPath: 'circle(150% at calc(100% - 56px) 28px)' }}
-            exit={{ clipPath: 'circle(0% at calc(100% - 56px) 28px)' }}
-            transition={{ duration: 0.7, ease }}
+            className="fixed inset-0 z-[120] flex bg-black [will-change:clip-path]"
+            initial={{ clipPath: `circle(0% at ${origin.x}px ${origin.y}px)` }}
+            animate={{ clipPath: `circle(150% at ${origin.x}px ${origin.y}px)` }}
+            exit={{ clipPath: `circle(0% at ${origin.x}px ${origin.y}px)` }}
+            transition={{ duration: 1.3, ease }}
           >
             {/* Left side — links */}
             <div className="flex flex-col justify-end flex-1 px-[clamp(24px,5vw,80px)] pb-[clamp(48px,8vw,100px)]">
@@ -70,7 +85,7 @@ export default function Nav() {
                   >
                     <Link
                       to={link.to}
-                      onClick={() => setOpen(false)}
+                      onClick={handleNavigate}
                       className="group flex items-center"
                     >
                       <span className="text-[0.625rem] font-medium tracking-[0.1em] text-[#444] tabular-nums py-6 pr-8">

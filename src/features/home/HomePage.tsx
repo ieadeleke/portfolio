@@ -3,7 +3,6 @@ import Hero from './components/Hero'
 import Bio from './components/Bio'
 import TechStack from './components/TechStack'
 import Services from './components/Services'
-import PinnedStats from './components/PinnedStats'
 import RecentProjects from './components/RecentProjects'
 
 export default function HomePage() {
@@ -13,7 +12,6 @@ export default function HomePage() {
       <Bio />
       <TechStack />
       <Services />
-      <PinnedStats />
       <RecentProjects />
       <FooterNew />
     </main>

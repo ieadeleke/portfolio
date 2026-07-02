@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { motion, cubicBezier } from "framer-motion";
 import ExpandLine from "../../../components/ExpandLine";
-// import RevealText from '../../../components/RevealText'
 import RevealWords from "../../../components/RevealWords";
 import { site } from "../../../config/site";
+import meImg from "../../../assets/me.png";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);
 
@@ -27,7 +27,7 @@ export default function Bio() {
 
           <div className="text-[clamp(1.375rem,2.5vw,2.125rem)] font-semibold leading-[1.35] tracking-[-0.02em] text-black mb-8">
             <RevealWords
-              text="I’m Ifeoluwase — a fullstack developer who builds digital products at the intersection of clean design and solid engineering. I also write technical articles and teach."
+              text="I'm Ifeoluwase — a fullstack developer who builds digital products at the intersection of clean design and solid engineering. I also write technical articles and teach."
               stagger={0.035}
             />
           </div>
@@ -76,7 +76,7 @@ export default function Bio() {
           </motion.div>
         </div>
 
-        {/* Design reel — curtain wipe */}
+        {/* Project collage — curtain wipe */}
         <div className="relative w-full h-170 overflow-hidden max-lg:aspect-[16/10] max-lg:h-auto max-lg:order-first">
           <motion.div
             className="absolute inset-0 bg-[#DFDFDF] z-10"
@@ -86,17 +86,17 @@ export default function Bio() {
             transition={{ duration: 1.2, delay: 0.2, ease }}
           />
           <motion.div
-            className="absolute inset-0 bg-[#111]"
+            className="absolute inset-0 bg-[#0f0f0f]"
             initial={{ scale: 1.4 }}
             whileInView={{ scale: 1 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 1.6, delay: 0.2, ease }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] flex items-center justify-center">
-              <span className="text-[0.6875rem] font-medium tracking-[0.15em] uppercase text-[#444]">
-                Design reel
-              </span>
-            </div>
+            <img
+              src={meImg}
+              alt="Ifeoluwase"
+              className="absolute inset-0 w-full h-full object-cover object-top"
+            />
           </motion.div>
         </div>
       </div>

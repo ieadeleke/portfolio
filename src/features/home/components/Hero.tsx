@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, cubicBezier } from 'framer-motion'
-import heroImg from '../../../assets/hero.png'
+import HandOfGod from './HandOfGod'
+
 
 const ease = cubicBezier(0.16, 1, 0.3, 1)
 
@@ -11,47 +12,12 @@ export default function Hero() {
     offset: ['start start', 'end start'],
   })
 
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.25])
-  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
 
   return (
     <section ref={heroRef} className="relative min-h-screen bg-black flex flex-col overflow-hidden">
       <div className="flex-1 relative">
-        <motion.div className="absolute inset-0" style={{ scale: heroScale, y: heroY }}>
-          <motion.img
-            src={heroImg}
-            alt="Ifeoluwase"
-            className="w-full h-full object-cover object-right-top"
-            initial={{ scale: 1.3, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 2, ease }}
-          />
-        </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80" />
-
-        <motion.div
-          className="absolute top-10 left-12 z-[1] max-lg:top-6 max-lg:left-6"
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.2, delay: 0.6, ease }}
-        >
-          <span className="text-[0.6875rem] font-medium tracking-[0.12em] uppercase text-white/60">
-            My Portfolio
-          </span>
-        </motion.div>
-        <motion.div
-          className="absolute top-10 right-12 z-[1] flex items-center gap-2 max-lg:top-6 max-lg:right-6"
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.2, delay: 0.6, ease }}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-pulse" />
-          <span className="text-[0.6875rem] font-medium tracking-[0.12em] uppercase text-white/60">
-            Open to work
-          </span>
-        </motion.div>
-
+        <HandOfGod />
         <motion.div
           className="absolute bottom-8 left-12 right-12 z-[1] flex items-end justify-between max-lg:bottom-6 max-lg:left-6 max-lg:right-6"
           style={{ opacity: heroOpacity }}
