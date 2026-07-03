@@ -1,5 +1,13 @@
 import { motion, cubicBezier } from 'framer-motion'
 import ExpandLine from '../../../components/ExpandLine'
+import creditProLogo from '../../../assets/companies/creditpro.png'
+import planGenieLogo from '../../../assets/companies/plangenie.svg'
+import lasgLogo from '../../../assets/companies/lasg-mono.png'
+import pay4itLogo from '../../../assets/companies/pay4it.svg'
+import gaagaLogo from '../../../assets/companies/gaaga.svg'
+import vo3Logo from '../../../assets/companies/vo.png'
+import ladoxLogo from '../../../assets/companies/ladox-mono.png'
+import findworkaLogo from '../../../assets/companies/findworka-mono.png'
 
 const ease = cubicBezier(0.16, 1, 0.3, 1)
 
@@ -8,17 +16,19 @@ type Client = {
   alt?: string
   src?: string
   href?: string
+  color?: boolean // keep original color (skip the white-silhouette filter)
+  h?: string // per-logo height override (default h-8)
 }
 
 const clients: Client[] = [
-  { name: 'Acme', alt: 'Acme' },
-  { name: 'Northwind', alt: 'Northwind' },
-  { name: 'Globex', alt: 'Globex' },
-  { name: 'Umbrella', alt: 'Umbrella' },
-  { name: 'Initech', alt: 'Initech' },
-  { name: 'Stark', alt: 'Stark Industries' },
-  { name: 'Wayne', alt: 'Wayne Enterprises' },
-  { name: 'Hooli', alt: 'Hooli' },
+  { name: 'CreditPro', alt: 'CreditPro', src: creditProLogo, h: 'h-6' },
+  { name: 'PlanGenie', alt: 'PlanGenie', src: planGenieLogo, h: 'h-4' },
+  { name: 'Lagos Theatre', alt: 'Lagos Theatre Igando', src: lasgLogo },
+  { name: 'Pay4It', alt: 'Pay4It', src: pay4itLogo, h: 'h-7' },
+  { name: 'Gaaga', alt: 'Gaaga', src: gaagaLogo, h: 'h-6' },
+  { name: 'VO3 Designs', alt: 'VO3 Designs', src: vo3Logo, h: 'h-6' },
+  { name: 'Ladox', alt: 'Ladox Engineering Company', src: ladoxLogo },
+  { name: 'Findworka', alt: 'Findworka', src: findworkaLogo, h: 'h-4' },
 ]
 
 export default function TrustedBy() {
@@ -52,7 +62,9 @@ export default function TrustedBy() {
                 <img
                   src={c.src}
                   alt={c.alt ?? c.name}
-                  className="h-10 w-auto opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                  className={`${c.h ?? 'h-8'} w-auto ${
+                    c.color ? '' : 'brightness-0 invert '
+                  }opacity-60 group-hover:opacity-100 transition-opacity duration-300`}
                 />
               ) : (
                 <span className="text-off-white/60 group-hover:text-off-white transition-colors duration-300 text-[0.9375rem] font-semibold tracking-[0.08em] uppercase">

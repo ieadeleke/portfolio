@@ -4,6 +4,7 @@ import Bio from './components/Bio'
 import TechStack from './components/TechStack'
 import Services from './components/Services'
 import RecentProjects from './components/RecentProjects'
+import ScrollRibbon from './components/ScrollRibbon'
 
 export default function HomePage() {
   return (
@@ -11,8 +12,12 @@ export default function HomePage() {
       <Hero />
       <Bio />
       <TechStack />
-      <Services />
-      <RecentProjects />
+      {/* black region: red ribbon flows down behind the content */}
+      <div className="relative bg-black">
+        <ScrollRibbon />
+        <Services />
+        <RecentProjects />
+      </div>
       <FooterNew />
     </main>
   )
