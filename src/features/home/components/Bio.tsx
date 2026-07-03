@@ -82,7 +82,7 @@ export default function Bio() {
         </div>
 
         {/* Project collage — curtain wipe */}
-        <div className="relative w-full h-170 overflow-hidden max-lg:aspect-[16/10] max-lg:h-auto max-lg:order-first">
+        <div className="relative w-full h-170 overflow-hidden max-lg:w-4/5 max-lg:aspect-4/5 max-lg:h-auto max-lg:order-first">
           <motion.div
             className="absolute inset-0 bg-[#DFDFDF] z-10"
             initial={{ x: "0%" }}

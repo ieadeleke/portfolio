@@ -10,6 +10,10 @@ import rightArt from './hand-right.txt?raw'
  *  - constant subtle glyph flicker (living code)
  *  - fingertip charge-up, then a spark that streaks the gap and ripples outward
  *  - occasional drifting embers rising off the hands
+ *
+ * Wide screens lay the two hands out side-by-side reaching horizontally. Narrow
+ * screens can't fit that, so they stack: Adam's hand on top (as-is) and God's
+ * hand flipped upside-down beneath it, the two meeting at the vertical centre.
  */
 
 const COLS = 80
@@ -22,6 +26,7 @@ const PAD_TOP = 0.16
 const AMP_X = 15
 const AMP_Y = 6
 const EDGE_BLEED = AMP_X + 2 // arms overflow their edge so parallax never reveals a gap
+const STACK_BP = 768 // below this width the hands stack vertically
 
 // timing (ms)
 const INTRO_DUR = 1600 // decode-in reveal
@@ -62,6 +67,7 @@ export default function HandOfGod() {
     let cell = 8
     let W = 0
     let H = 0
+    let stacked = false
     let left: Hand | null = null
     let right: Hand | null = null
     let glyphsL: Glyph[] = []
@@ -75,6 +81,14 @@ export default function HandOfGod() {
     let adamTipX = 0
     let adamTipY = 0
     let maxDist = 1
+    // stacked-layout geometry
+    let sxA = 0
+    let syA = 0
+    let sxG = 0
+    let syG = 0
+    let hhA = 0
+    let hhG = 0
+    let lwS = 0
     let raf = 0
     let start = 0
     let lastNow = 0
@@ -107,13 +121,17 @@ export default function HandOfGod() {
       return (H + PAD_TOP * H - rows * cell) / 2
     }
 
-    function collect(lines: string[], x0: number): Glyph[] {
-      const oy = originY(lines.length)
+    // Collect glyph positions. y0 overrides the centred origin (used by the
+    // stacked layout); flip reverses row order for an upside-down hand.
+    function collect(lines: string[], x0: number, y0?: number, flip?: boolean): Glyph[] {
+      const rows = lines.length
+      const oy = y0 ?? originY(rows)
       const out: Glyph[] = []
-      for (let r = 0; r < lines.length; r++) {
+      for (let r = 0; r < rows; r++) {
         const line = lines[r]
+        const rr = flip ? rows - 1 - r : r
         for (let col = 0; col < Math.min(COLS, line.length); col++) {
-          if (line[col] !== ' ') out.push({ ch: line[col], bx: x0 + col * cell + cell / 2, by: oy + r * cell + cell / 2 })
+          if (line[col] !== ' ') out.push({ ch: line[col], bx: x0 + col * cell + cell / 2, by: oy + rr * cell + cell / 2 })
         }
       }
       return out
@@ -124,7 +142,10 @@ export default function HandOfGod() {
       dpr = Math.min(window.devicePixelRatio || 1, 2)
       W = rect.width
       H = rect.height
-      cell = Math.max(6, Math.min(W * 0.0057, 11))
+      stacked = W < STACK_BP
+      cell = stacked
+        ? Math.max(3.5, Math.min(W / COLS, 9)) // size the hands to the width; keep them prominent
+        : Math.max(6, Math.min(W * 0.0057, 11))
       canvas!.width = Math.ceil(W * dpr)
       canvas!.height = Math.ceil(H * dpr)
       canvas!.style.width = `${W}px`
@@ -135,6 +156,14 @@ export default function HandOfGod() {
       ctx!.textBaseline = 'middle'
       left = buildHand(leftLines)
       right = buildHand(rightLines)
+
+      flickers.length = 0
+      embers.length = 0
+
+      if (stacked) {
+        buildStacked()
+        return
+      }
 
       const lw = COLS * cell
       glyphsL = collect(leftLines, 0)
@@ -151,11 +180,156 @@ export default function HandOfGod() {
       const near = cell * 4.5
       tipGlyphsL = glyphsL.filter((g) => Math.hypot(g.bx - adamTipX, g.by - adamTipY) < near)
       tipGlyphsR = glyphsR.filter((g) => Math.hypot(g.bx - godTipX, g.by - godTipY) < near)
-      flickers.length = 0
-      embers.length = 0
+    }
+
+    // Narrow layout: Adam's hand on top (as-is), God's hand flipped upside-down
+    // below it, the two meeting at the vertical centre.
+    function buildStacked() {
+      lwS = COLS * cell
+      hhA = left!.rows * cell
+      hhG = right!.rows * cell
+      sxA = (W - lwS) / 2
+      sxG = (W - lwS) / 2
+
+      // Measure each hand's real glyph extent so we centre the *hands*, not the
+      // empty padding rows in the art (which would otherwise meet in the middle
+      // and leave a hollow gap with the hands shoved to the edges).
+      const extentOf = (arr: Glyph[]) => {
+        let mn = Infinity
+        let mx = -Infinity
+        for (const g of arr) { if (g.by < mn) mn = g.by; if (g.by > mx) mx = g.by }
+        return { mn, h: mx - mn }
+      }
+      const eL = extentOf(collect(leftLines, sxA, 0, false))
+      const eR = extentOf(collect(rightLines, sxG, 0, true))
+      const jointGap = cell * 40 // breathing gap where the hands meet
+      const contentTop = (H - (eL.h + jointGap + eR.h)) / 2 // centre the combined content block
+      syA = contentTop - eL.mn
+      syG = contentTop + eL.h + jointGap - eR.mn
+
+      glyphsL = collect(leftLines, sxA, syA, false)
+      glyphsR = collect(rightLines, sxG, syG, true)
+
+      contactX = W / 2
+      contactY = contentTop + eL.h + jointGap / 2
+      maxDist = 1
+      for (const g of glyphsL) { const d = Math.hypot(g.bx - contactX, g.by - contactY); if (d > maxDist) maxDist = d }
+      for (const g of glyphsR) { const d = Math.hypot(g.bx - contactX, g.by - contactY); if (d > maxDist) maxDist = d }
+      // tips = the glyphs each hand reaches closest to the meeting point
+      adamTipX = contactX; adamTipY = contactY
+      let best = Infinity
+      for (const g of glyphsL) { const d = Math.hypot(g.bx - contactX, g.by - contactY); if (d < best) { best = d; adamTipX = g.bx; adamTipY = g.by } }
+      godTipX = contactX; godTipY = contactY
+      best = Infinity
+      for (const g of glyphsR) { const d = Math.hypot(g.bx - contactX, g.by - contactY); if (d < best) { best = d; godTipX = g.bx; godTipY = g.by } }
+      const near = cell * 4.5
+      tipGlyphsL = glyphsL.filter((g) => Math.hypot(g.bx - adamTipX, g.by - adamTipY) < near)
+      tipGlyphsR = glyphsR.filter((g) => Math.hypot(g.bx - godTipX, g.by - godTipY) < near)
     }
 
     const pointer = { tx: 0, ty: 0, x: 0, y: 0 }
+
+    // Base hands for the stacked layout: Adam upright on top, God flipped below.
+    function drawStackedBase(dx: number, dy: number) {
+      ctx!.drawImage(left!.cv, sxA + dx, syA + dy, lwS, hhA)
+      ctx!.save()
+      ctx!.translate(sxG + dx, syG + hhG + dy)
+      ctx!.scale(1, -1)
+      ctx!.drawImage(right!.cv, 0, 0, lwS, hhG)
+      ctx!.restore()
+    }
+
+    function drawStacked(elapsed: number, now: number, dx: number, dy: number) {
+      if (reduceMotion) {
+        drawStackedBase(dx, dy)
+        return
+      }
+
+      // fade the whole composition in (avoids per-glyph orientation flicker
+      // that the desktop decode would show against the flipped hand)
+      ctx!.globalAlpha = Math.min(1, elapsed / INTRO_DUR)
+      drawStackedBase(dx, dy)
+      ctx!.globalAlpha = 1
+
+      if (elapsed < INTRO_DUR) {
+        raf = requestAnimationFrame(draw)
+        return
+      }
+
+      // --- ambient glyph flicker ---
+      for (let k = flickers.length - 1; k >= 0; k--) if (flickers[k].until < now) flickers.splice(k, 1)
+      while (flickers.length < 20) {
+        const hand: 0 | 1 = Math.random() < 0.5 ? 0 : 1
+        const arr = hand ? glyphsR : glyphsL
+        flickers.push({ hand, idx: (Math.random() * arr.length) | 0, until: now + 120 + Math.random() * 260, ch: randGlyph((Math.random() * 9999) | 0) })
+      }
+      ctx!.fillStyle = COLOR
+      for (const f of flickers) {
+        const arr = f.hand ? glyphsR : glyphsL
+        const g = arr[f.idx]
+        if (!g) continue
+        const x = g.bx + dx
+        const y = g.by + dy
+        ctx!.clearRect(x - cell / 2, y - cell / 2, cell, cell)
+        ctx!.fillText(f.ch, x, y)
+      }
+
+      // --- spark pulse cycle (from the central meeting point) ---
+      const st = elapsed - INTRO_DUR - SPARK_START_DELAY
+      if (st > 0) {
+        const t = st % PERIOD
+
+        if (t > PERIOD - CHARGE_DUR) {
+          const ci = (t - (PERIOD - CHARGE_DUR)) / CHARGE_DUR
+          const flick = 0.6 + 0.4 * Math.abs(Math.sin(now / 40))
+          ctx!.fillStyle = SPARK_COLOR
+          for (const g of tipGlyphsL) { ctx!.globalAlpha = ci * flick; ctx!.fillText(g.ch, g.bx + dx, g.by + dy) }
+          for (const g of tipGlyphsR) { ctx!.globalAlpha = ci * flick; ctx!.fillText(g.ch, g.bx + dx, g.by + dy) }
+          ctx!.globalAlpha = 1
+        }
+
+        if (t >= RIPPLE_START && t < RIPPLE_START + RIPPLE_DUR) {
+          const p = (t - RIPPLE_START) / RIPPLE_DUR
+          const radius = p * maxDist
+          const band = cell * 7
+          const tail = 1 - p * 0.55
+          ctx!.fillStyle = RIPPLE_COLOR
+          const paint = (arr: Glyph[]) => {
+            for (const g of arr) {
+              const dd = Math.abs(Math.hypot(g.bx - contactX, g.by - contactY) - radius)
+              if (dd < band) {
+                ctx!.globalAlpha = (1 - dd / band) * tail
+                ctx!.fillText(g.ch, g.bx + dx, g.by + dy)
+              }
+            }
+          }
+          paint(glyphsL)
+          paint(glyphsR)
+          ctx!.globalAlpha = 1
+        }
+
+        if (t < SPARK_DUR) {
+          const head = t / SPARK_DUR
+          const ax = adamTipX + dx
+          const ay = adamTipY + dy
+          const gx = godTipX + dx
+          const gy = godTipY + dy
+          const steps = Math.max(2, Math.round(Math.hypot(ax - gx, ay - gy) / cell))
+          ctx!.fillStyle = SPARK_COLOR
+          for (let i = 0; i <= steps; i++) {
+            const u = i / steps
+            if (u > head) break
+            const behind = head - u
+            if (behind > 0.45) continue
+            ctx!.globalAlpha = 1 - behind / 0.45
+            ctx!.fillText(behind < 0.06 ? '*' : '=', gx + (ax - gx) * u, gy + (ay - gy) * u)
+          }
+          ctx!.globalAlpha = 1
+        }
+      }
+
+      raf = requestAnimationFrame(draw)
+    }
 
     function draw(now: number) {
       if (!start) { start = now; lastNow = now }
@@ -169,6 +343,12 @@ export default function HandOfGod() {
       pointer.y += (pointer.ty - pointer.y) * 0.06
       const dx = pointer.x * AMP_X
       const dy = pointer.y * AMP_Y
+
+      if (stacked) {
+        drawStacked(elapsed, now, dx, dy)
+        return
+      }
+
       const lw = COLS * cell
       // baseline outward bleed keeps each arm past its screen edge through the full parallax range
       const lox = -dx - EDGE_BLEED
