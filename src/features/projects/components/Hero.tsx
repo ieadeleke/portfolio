@@ -74,7 +74,7 @@ export default function Hero() {
         </motion.h1>
       </div>
 
-      <div className="z-[1] grid grid-cols-3 border-t border-[#222] max-lg:grid-cols-1">
+      <div className="z-[1] grid grid-cols-3 border-t border-[#222] max-lg:grid-cols-2">
         {tagLabels.map((label, i) => (
           <span key={label} className="block overflow-hidden">
             <motion.span

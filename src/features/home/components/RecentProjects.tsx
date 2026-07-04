@@ -85,15 +85,15 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
               {project.title}
             </h3>
           </div>
-          <span className="text-[0.6875rem] font-medium tracking-[0.05em] text-[#555] shrink-0 pt-0.5">
+          <span className="text-[0.6875rem] font-medium tracking-[0.05em] text-[#555] shrink-0 pt-0.5 max-sm:hidden">
             {project.year}
           </span>
         </div>
-        <div className="flex items-center gap-3 mt-2.5 ml-[calc(clamp(8px,1vw,14px)+1.1em)]">
+        <div className="flex items-center gap-3 mt-2.5 ml-[calc(clamp(8px,1vw,14px)+1.1em)] max-sm:flex-col max-sm:items-start max-sm:gap-1">
           <span className="text-[0.75rem] font-medium tracking-[0.08em] uppercase text-[#555]">
             {project.category}
           </span>
-          <span className="w-1 h-1 rounded-full bg-[#983520]" />
+          <span className="w-1 h-1 rounded-full bg-[#983520] max-sm:hidden" />
           <span className="text-[0.75rem] font-normal text-[#555]">
             {project.stack}
           </span>

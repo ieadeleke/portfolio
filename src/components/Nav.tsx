@@ -75,7 +75,7 @@ export default function Nav() {
             transition={{ duration: 1.3, ease }}
           >
             {/* Left side — links */}
-            <div className="flex flex-col justify-end flex-1 px-[clamp(24px,5vw,80px)] pb-[clamp(48px,8vw,100px)]">
+            <div className="flex flex-col justify-end max-lg:justify-center flex-1 px-[clamp(24px,5vw,80px)] pb-[clamp(48px,8vw,100px)]">
               <motion.p
                 className="text-[0.625rem] font-semibold tracking-[0.15em] uppercase text-[#555] mb-12"
                 initial={{ opacity: 0, y: 20 }}

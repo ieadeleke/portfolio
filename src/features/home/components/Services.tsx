@@ -131,6 +131,17 @@ function ServiceRow({
           {String(index + 1).padStart(2, "0")}
         </span>
         <div className="flex items-start justify-between gap-[clamp(20px,4vw,60px)] w-full max-md:flex-col max-md:gap-3">
+          {/* Mobile-only image — stacked on top of the text */}
+          <div
+            style={{ backgroundColor: service.accent }}
+            className="hidden max-sm:block w-full rounded-xl overflow-hidden p-4 mb-1"
+          >
+            <img
+              src={service.image}
+              alt={service.title}
+              className="w-full block rounded-md"
+            />
+          </div>
           <div className="overflow-hidden shrink-0">
             <motion.h3
               className="text-[clamp(1.25rem,2.2vw,2rem)] font-extrabold tracking-[-0.03em] leading-none uppercase text-off-white"

@@ -11,7 +11,7 @@ export default function FooterNew() {
   return (
     <footer className="bg-black">
       <div className="max-w-[1400px] mx-auto px-[clamp(20px,5vw,80px)] pt-[clamp(72px,10vw,120px)] pb-10 relative">
-        <div className="grid grid-cols-2">
+        <div className="flex flex-col-reverse md:grid grid-cols-2">
           <div className="">
             {/* Left — Big CTA */}
             <motion.div
@@ -20,7 +20,7 @@ export default function FooterNew() {
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease }}
             >
-              <h2 className="font-extrabold tracking-[-0.03em] font-outfit text-off-white leading-[1.3] mb-14 text-[clamp(1.2rem,4vw,3.8rem)]">
+              <h2 className="font-extrabold tracking-[-0.03em] font-outfit text-off-white leading-[1.3] mb-14 text-[clamp(2rem,4vw,3.8rem)]">
                 Have an idea?
                 <br />
                 Let's hop on a call.
@@ -70,7 +70,7 @@ export default function FooterNew() {
               </div> */}
             </motion.div>
           </div>
-          <div className="relative">
+          <div className="relative h-32 md:h-unset">
             <a
               href={`/contact`}
               aria-label="Available for work — get in touch"
