@@ -62,7 +62,7 @@ export default function TechStack() {
               {techPanels[active].map((tech, i) => (
                 <motion.div
                   key={tech}
-                  className="flex items-center justify-center h-[clamp(72px,9vw,100px)] border-b border-r border-[#c8c8c8] max-lg:[&:nth-child(3n)]:border-r-0 max-sm:[&:nth-child(3n)]:border-r max-sm:[&:nth-child(2n)]:border-r-0 last:border-r-0 [&:nth-child(4n)]:border-r-0 max-lg:[&:nth-child(4n)]:border-r"
+                  className="flex items-center justify-center h-[clamp(72px,9vw,100px)] border-b border-r border-[#c8c8c8] lg:[&:nth-child(4n)]:border-r-0 sm:max-lg:[&:nth-child(3n)]:border-r-0 max-sm:[&:nth-child(2n)]:border-r-0"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: i * 0.04, ease }}

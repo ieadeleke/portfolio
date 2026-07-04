@@ -5,10 +5,10 @@ import { motion, useMotionValue, useSpring, useTransform, cubicBezier } from 'fr
 const ease = cubicBezier(0.16, 1, 0.3, 1)
 
 const projects = [
-  { title: 'Vaultify', category: 'Fintech', type: 'Web Application', year: '2024', imgClass: 'project-img-1' },
-  { title: 'Kulture', category: 'E-commerce', type: 'Platform Design', year: '2024', imgClass: 'project-img-2' },
-  { title: 'Nomad', category: 'Travel', type: 'Mobile Application', year: '2023', imgClass: 'project-img-3' },
-  { title: 'Soundwave', category: 'Entertainment', type: 'Streaming Platform', year: '2023', imgClass: 'project-img-4' },
+  { title: 'Kariiya', category: 'Career Platform', stack: 'Next.js | Express | Python | MongoDB', year: '2024', imgClass: 'project-img-1' },
+  { title: 'Gaaga', category: 'Entertainment', stack: 'React | Tailwind | Framer Motion', year: '2024', imgClass: 'project-img-2' },
+  { title: 'Madam Shikini', category: 'AI Chatbot', stack: 'Next.js | Express | Postgres', year: '2023', imgClass: 'project-img-3' },
+  { title: 'UsePay4it', category: 'Fintech', stack: 'Next.js | Express | Postgres', year: '2023', imgClass: 'project-img-4' },
 ]
 
 function ProjectCard({ project, index }: { project: typeof projects[0]; index: number }) {
@@ -42,7 +42,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
     >
       <div
         ref={ref}
-        className="relative overflow-hidden aspect-[3/2]"
+        className="relative overflow-hidden rounded-2xl aspect-[3/2]"
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
@@ -95,7 +95,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
           </span>
           <span className="w-1 h-1 rounded-full bg-[#983520]" />
           <span className="text-[0.75rem] font-normal text-[#555]">
-            {project.type}
+            {project.stack}
           </span>
         </div>
       </div>

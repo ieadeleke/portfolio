@@ -11,22 +11,48 @@ const ease = cubicBezier(0.16, 1, 0.3, 1);
 export default function Bio() {
   return (
     <section className="py-[clamp(60px,8vw,120px)] px-[clamp(24px,5vw,80px)] bg-[#DFDFDF]">
-      <div className="grid grid-cols-2 gap-[clamp(40px,6vw,120px)] max-w-[1400px] mx-auto items-start max-lg:grid-cols-1">
-        <div className="pt-4">
-          <motion.div
-            className="flex items-center gap-4 mb-10"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.6, ease }}
-          >
-            <ExpandLine className="bg-gray w-12" />
-            <p className="text-[0.6875rem] font-semibold tracking-[0.15em] uppercase text-gray">
-              About Me
-            </p>
-          </motion.div>
+      <div className="grid grid-cols-2 gap-x-[clamp(40px,6vw,120px)] max-w-[1400px] mx-auto items-start max-lg:flex max-lg:flex-col max-lg:gap-8">
+        {/* About Me label */}
+        <motion.div
+          className="flex items-center gap-4 mb-10 lg:pt-4 lg:col-start-1 lg:row-start-1 max-lg:mb-0"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6, ease }}
+        >
+          <ExpandLine className="bg-gray w-12 shrink-0" />
+          <p className="text-[0.6875rem] font-semibold tracking-[0.15em] uppercase text-gray">
+            About Me
+          </p>
+        </motion.div>
 
-          <div className="text-[clamp(1.375rem,2.5vw,2.125rem)] font-semibold leading-[1.35] tracking-[-0.02em] text-black mb-8">
+        {/* Project collage — curtain wipe */}
+        <div className="relative w-full h-170 overflow-hidden lg:col-start-2 lg:row-start-1 lg:row-span-2 max-lg:w-4/5 max-lg:aspect-square max-lg:h-auto max-lg:rounded-2xl">
+          <motion.div
+            className="absolute inset-0 bg-[#DFDFDF] z-10"
+            initial={{ x: "0%" }}
+            whileInView={{ x: "101%" }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 1.2, delay: 0.2, ease }}
+          />
+          <motion.div
+            className="absolute inset-0 bg-[#0f0f0f]"
+            initial={{ scale: 1.4 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 1.6, delay: 0.2, ease }}
+          >
+            <img
+              src={meImg}
+              alt="Ifeoluwase"
+              className="absolute inset-0 w-full h-full object-cover object-top"
+            />
+          </motion.div>
+        </div>
+
+        {/* About text + links */}
+        <div className="lg:col-start-1 lg:row-start-2">
+          <div className="text-[clamp(1.375rem,2.5vw,2.125rem)] font-semibold leading-[1.35] tracking-[-0.02em] text-black mb-4 md:mb-8">
             <RevealWords
               text="I'm Ifeoluwase — a fullstack developer who builds digital products at the intersection of clean design and solid engineering. I also write technical articles and teach."
               stagger={0.035}
@@ -34,7 +60,7 @@ export default function Bio() {
           </div>
 
           <motion.p
-            className="text-[0.9375rem] font-normal leading-[1.8] text-gray-dark max-w-[440px] mb-10"
+            className="text-[0.9375rem] font-normal leading-[1.8] text-gray-dark max-w-[440px] mb-4 md:mb-10"
             initial={{ opacity: 0, filter: "blur(10px)" }}
             whileInView={{ opacity: 1, filter: "blur(0px)" }}
             viewport={{ once: true, margin: "-80px" }}
@@ -78,30 +104,6 @@ export default function Bio() {
                 aria-hidden="true"
               />
             </a>
-          </motion.div>
-        </div>
-
-        {/* Project collage — curtain wipe */}
-        <div className="relative w-full h-170 overflow-hidden max-lg:w-4/5 max-lg:aspect-4/5 max-lg:h-auto max-lg:order-first">
-          <motion.div
-            className="absolute inset-0 bg-[#DFDFDF] z-10"
-            initial={{ x: "0%" }}
-            whileInView={{ x: "101%" }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 1.2, delay: 0.2, ease }}
-          />
-          <motion.div
-            className="absolute inset-0 bg-[#0f0f0f]"
-            initial={{ scale: 1.4 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 1.6, delay: 0.2, ease }}
-          >
-            <img
-              src={meImg}
-              alt="Ifeoluwase"
-              className="absolute inset-0 w-full h-full object-cover object-top"
-            />
           </motion.div>
         </div>
       </div>

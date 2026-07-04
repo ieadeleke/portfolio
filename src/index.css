@@ -199,72 +199,43 @@
     z-index: 1;
   }
 
-  /* 1 — Vaultify: geometric grid + gradient */
+  /* 1 — Vaultify: real image */
   .project-img-1::before {
     content: '';
     position: absolute;
     inset: 0;
     background:
-      repeating-linear-gradient(90deg,
-        transparent,
-        transparent calc(25% - 1px),
-        rgba(255, 255, 255, 0.04) calc(25% - 1px),
-        rgba(255, 255, 255, 0.04) 25%),
-      repeating-linear-gradient(0deg,
-        transparent,
-        transparent calc(25% - 1px),
-        rgba(255, 255, 255, 0.04) calc(25% - 1px),
-        rgba(255, 255, 255, 0.04) 25%),
+      url('./assets/kariiya_2.png') center / cover no-repeat,
       linear-gradient(145deg, #0a0f1a 0%, #16213e 50%, #0f3460 100%);
   }
 
-  /* 2 — Kulture: diagonal stripes + warm gradient */
+  /* 2 — Kulture: real image */
   .project-img-2::before {
     content: '';
     position: absolute;
     inset: 0;
     background:
-      repeating-linear-gradient(135deg,
-        transparent,
-        transparent 40px,
-        rgba(255, 255, 255, 0.03) 40px,
-        rgba(255, 255, 255, 0.03) 41px),
+      url('./assets/gaaga-1.png') center / cover no-repeat,
       linear-gradient(145deg, #1a0a14 0%, #2d1b2e 50%, #3d1f3e 100%);
   }
 
-  /* 3 — Nomad: concentric circles + green gradient */
+  /* 3 — Nomad: real image */
   .project-img-3::before {
     content: '';
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(circle at 60% 45%,
-        transparent 15%,
-        rgba(255, 255, 255, 0.03) 15.5%,
-        transparent 16%,
-        transparent 30%,
-        rgba(255, 255, 255, 0.03) 30.5%,
-        transparent 31%,
-        transparent 45%,
-        rgba(255, 255, 255, 0.03) 45.5%,
-        transparent 46%,
-        transparent 60%,
-        rgba(255, 255, 255, 0.03) 60.5%,
-        transparent 61%),
+      url('./assets/madam.png') center / cover no-repeat,
       linear-gradient(145deg, #0a1a10 0%, #14352a 50%, #0f2e20 100%);
   }
 
-  /* 4 — Soundwave: horizontal bars + warm gradient */
+  /* 4 — Soundwave: real image */
   .project-img-4::before {
     content: '';
     position: absolute;
     inset: 0;
     background:
-      repeating-linear-gradient(0deg,
-        transparent,
-        transparent 20px,
-        rgba(255, 255, 255, 0.04) 20px,
-        rgba(255, 255, 255, 0.04) 21px),
+      url('./assets/usepay4it.png') center / cover no-repeat,
       linear-gradient(145deg, #1a150a 0%, #2e2510 50%, #3a2f14 100%);
   }
 
