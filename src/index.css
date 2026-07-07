@@ -103,7 +103,7 @@
   body {
     background: #DFDFDF;
     color: var(--color-black);
-    overflow-x: hidden;
+    overflow-x: hidden !important;
   }
 
   h1,

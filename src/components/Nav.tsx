@@ -176,10 +176,10 @@ export default function Nav() {
                 </p>
                 <div className="flex gap-5">
                   {[
-                    { name: 'X', href: site.social.x || site.social.twitter || '#' },
+                    { name: 'X', href: site.social.x },
                     { name: 'LinkedIn', href: site.social.linkedin || '#' },
                     { name: 'GitHub', href: site.social.github || '#' },
-                    { name: 'Dribbble', href: site.social.dribbble || '#' },
+                    { name: 'Medium', href: site.social.medium || '#' },
                   ].map((s, i) => (
                     <motion.a
                       key={s.name}
