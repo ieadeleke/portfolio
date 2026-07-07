@@ -14,7 +14,7 @@ export default function HomePage() {
       <Bio />
       <TechStack />
       {/* black region: red ribbon flows down behind the content */}
-      <div className="relative bg-black">
+      <div className="relative bg-black overflow-x-hidden">
         <ScrollRibbon />
         <Services />
         <RecentProjects />
