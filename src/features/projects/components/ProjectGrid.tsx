@@ -43,13 +43,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
     <motion.div
       ref={cardRef}
       style={{ y: parallaxY }}
-      className={
-        index === 0 || index === 1
-          ? 'lg:col-span-2'
-          : index % 2 === 1
-            ? 'lg:mt-[clamp(40px,6vw,100px)]'
-            : ''
-      }
+      className={index % 2 === 1 ? 'lg:mt-[clamp(40px,6vw,100px)]' : ''}
     >
     <motion.a
       href="#"

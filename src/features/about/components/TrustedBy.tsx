@@ -52,7 +52,7 @@ export default function TrustedBy() {
           {clients.map((c, i) => (
             <motion.div
               key={c.name}
-              className="group flex items-center justify-center h-20 border border-[#1a1a1a] bg-[#0b0b0b] rounded-sm overflow-hidden"
+              className="group flex items-center justify-center h-20 max-sm:h-16 border border-[#1a1a1a] bg-[#0b0b0b] rounded-sm overflow-hidden"
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
@@ -62,7 +62,7 @@ export default function TrustedBy() {
                 <img
                   src={c.src}
                   alt={c.alt ?? c.name}
-                  className={`${c.h ?? 'h-8'} w-auto ${
+                  className={`${c.h ?? 'h-8'} w-auto max-sm:scale-75 ${
                     c.color ? '' : 'brightness-0 invert '
                   }opacity-60 group-hover:opacity-100 transition-opacity duration-300`}
                 />

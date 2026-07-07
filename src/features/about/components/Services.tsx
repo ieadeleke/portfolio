@@ -113,7 +113,7 @@ export default function Services() {
                 </motion.h3>
               </div>
               <motion.div
-                className="grid grid-cols-2 gap-x-8 gap-y-1.5 max-sm:grid-cols-1"
+                className="grid grid-cols-2 gap-x-8 gap-y-1.5 max-sm:gap-x-5"
                 variants={staggerContainer}
                 initial="hidden"
                 whileInView="visible"
