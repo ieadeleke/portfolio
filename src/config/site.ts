@@ -15,12 +15,11 @@ export const site = {
   },
   social: {
     // Replace these with your real profiles
-    x: 'https://x.com/your-handle',
-    twitter: 'https://twitter.com/your-handle',
-    linkedin: 'https://www.linkedin.com/in/your-handle/',
-    github: 'https://github.com/your-handle',
-    dribbble: 'https://dribbble.com/your-handle',
-    medium: 'https://medium.com/@your-handle',
+    x: 'https://x.com/eadelekeife',
+    linkedin: 'https://www.linkedin.com/in/ifeoluwase-adeleke/',
+    github: 'https://github.com/ieadeleke',
+    medium: 'https://medium.com/@eadelekeife',
+    codesandbox: 'https://codesandbox.io/u/eadelekeife'
   },
 }
 

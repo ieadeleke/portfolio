@@ -12,23 +12,23 @@ export type Article = {
 // Replace these with your real articles
 export const articles: Article[] = [
   {
-    title: 'Placeholder: Taming Re-renders in Large React Apps',
-    topic: 'React Performance',
+    title: 'A Beginner’s Guide into Middleware in Express.js and Node.js',
+    topic: 'Backend',
     platform: 'Medium',
-    date: 'Mar 2025',
-    year: '2025',
-    readTime: '8 min read',
-    url: '#',
+    date: 'Mar 2023',
+    year: '2023',
+    readTime: '6 min read',
+    url: 'https://medium.com/dev-genius/understanding-and-working-with-middleware-in-express-js-ed19255237b',
     featured: true,
   },
   {
-    title: 'Placeholder: Designing APIs That Age Well',
-    topic: 'Backend Engineering',
+    title: 'Validating form inputs on your Express.js application with express-validator',
+    topic: 'Backend',
     platform: 'Medium',
-    date: 'Jan 2025',
-    year: '2025',
-    readTime: '10 min read',
-    url: '#',
+    date: 'Jun 2022',
+    year: '2022',
+    readTime: '7 min read',
+    url: 'https://medium.com/dev-genius/validating-user-inputs-on-your-express-js-application-with-express-validator-4d82b995f524',
     featured: true,
   },
   {
@@ -39,7 +39,6 @@ export const articles: Article[] = [
     year: '2024',
     readTime: '6 min read',
     url: '#',
-    featured: true,
   },
   {
     title: 'Placeholder: Postgres Indexing, Explained Simply',
