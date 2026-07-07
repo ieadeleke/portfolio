@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, AnimatePresence, cubicBezier } from 'framer-motion'
+import { motion, AnimatePresence, cubicBezier, useScroll, useMotionValueEvent } from 'framer-motion'
 import { site } from '../config/site'
 import logoMark from '../assets/logo-mark.svg'
 
@@ -9,6 +9,7 @@ const ease = cubicBezier(0.16, 1, 0.3, 1)
 const links = [
   { label: 'About', to: '/about' },
   { label: 'Projects', to: '/projects' },
+  // { label: 'Writing', to: '/writing' }, // hidden until there are more articles
   { label: 'Contact', to: '/contact' },
 ]
 
@@ -16,6 +17,9 @@ export default function Nav() {
   const [open, setOpen] = useState(false)
   const btnRef = useRef<HTMLButtonElement>(null)
   const [origin, setOrigin] = useState({ x: 0, y: 0 })
+  const [scrolled, setScrolled] = useState(false)
+  const { scrollY } = useScroll()
+  useMotionValueEvent(scrollY, 'change', (y) => setScrolled(y > 40))
 
   const toggle = () => {
     const r = btnRef.current?.getBoundingClientRect()
@@ -32,7 +36,11 @@ export default function Nav() {
   return (
     <>
       {/* Top bar — always visible */}
-      <div className="fixed top-0 left-0 right-0 z-[130] flex items-center justify-between px-[clamp(24px,5vw,80px)] py-5">
+      <div
+        className={`fixed top-0 left-0 right-0 z-[130] flex items-center justify-between px-[clamp(24px,5vw,80px)] py-5 transition-colors duration-300 ${
+          scrolled && !open ? 'bg-black' : 'bg-transparent'
+        }`}
+      >
         <Link to="/" className="group flex items-center gap-2.5">
           <img
             src={logoMark}
@@ -152,6 +160,14 @@ export default function Nav() {
                   className="text-sm text-[#777] transition-colors duration-200 hover:text-off-white"
                 >
                   {site.contact.email}
+                </a>
+                <a
+                  href={site.contact.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block mt-2 text-sm text-[#777] transition-colors duration-200 hover:text-off-white"
+                >
+                  {site.contact.phoneDisplay}
                 </a>
               </div>
               <div>

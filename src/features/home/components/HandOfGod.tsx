@@ -17,7 +17,7 @@ import rightArt from './hand-right.txt?raw'
  */
 
 const COLS = 80
-const COLOR = '#983520'
+const COLOR = '#c9542f'
 const RIPPLE_COLOR = '#ff8a52'
 const SPARK_COLOR = '#ffe4c4'
 const EMBER_COLOR = '#c86a44'
@@ -523,7 +523,7 @@ export default function HandOfGod() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 overflow-hidden"
     >
-      <canvas ref={canvasRef} className="absolute inset-0" style={{ opacity: 0.7 }} />
+      <canvas ref={canvasRef} className="absolute inset-0" style={{ opacity: 1 }} />
     </div>
   )
 }

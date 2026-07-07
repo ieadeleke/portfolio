@@ -81,7 +81,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
             <span className="text-[0.625rem] font-medium tracking-[0.1em] text-[#983520] tabular-nums shrink-0">
               {String(index + 1).padStart(2, '0')}
             </span>
-            <h3 className="text-[clamp(1.25rem,2.2vw,2rem)] font-extrabold tracking-[-0.03em] leading-none uppercase text-off-white transition-colors duration-300 group-hover:text-[#c9542f]">
+            <h3 className="text-[clamp(1.25rem,2.2vw,2rem)] font-extrabold tracking-[-0.01em] leading-none text-off-white transition-colors duration-300 group-hover:text-[#c9542f]">
               {project.title}
             </h3>
           </div>

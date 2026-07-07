@@ -4,6 +4,7 @@ import Bio from './components/Bio'
 import TechStack from './components/TechStack'
 import Services from './components/Services'
 import RecentProjects from './components/RecentProjects'
+import Writing from './components/Writing'
 import ScrollRibbon from './components/ScrollRibbon'
 
 export default function HomePage() {
@@ -17,6 +18,7 @@ export default function HomePage() {
         <ScrollRibbon />
         <Services />
         <RecentProjects />
+        <Writing />
       </div>
       <FooterNew />
     </main>

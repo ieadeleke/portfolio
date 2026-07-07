@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 
 /**
- * A scroll-reactive red ribbon that grows down the left side of the black
+ * A scroll-reactive red ribbon that grows down the center of the black
  * lower half of the homepage. Its length is tied to scroll position — it
  * extends downward and trails behind you as you move — and its curve morphs
  * (arc → S → C) as it grows. Drawn as a round-capped stroke in real pixel
  * space so the thickness stays even and the ends stay rounded.
  */
 const RED = '#a8331b' // muted brick red that sinks into the black rather than clashing
-const OPACITY = 0.5 // kept low so it reads as an ambient backdrop behind the content
+const OPACITY = 0.2 // kept low so it reads as an ambient backdrop behind the content
 const N = 64 // sample points down the spine
 const THICKNESS = 26 // px, uniform ribbon width
 const GAP_FILL = 0.82 // ribbon holds a gap under the tip until near the bottom
@@ -26,11 +26,11 @@ function fillFor(p: number) {
 function spineX(yFrac: number, p: number, W: number) {
   const phase = p * Math.PI * 2.2
   const f = Math.PI * 2 * 1.35 // ~1.35 primary waves over the full height
-  const amp = 0.26 + 0.11 * Math.sin(p * Math.PI * 2) // primary swing breathes
-  const amp2 = 0.07 + 0.04 * Math.cos(p * Math.PI * 2) // secondary detail
+  const amp = 0.125 + 0.055 * Math.sin(p * Math.PI * 2) // primary swing breathes
+  const amp2 = 0.035 + 0.02 * Math.cos(p * Math.PI * 2) // secondary detail
   return (
     W *
-    (0.4 +
+    (0.5 +
       amp * Math.sin(yFrac * f + phase) +
       amp2 * Math.sin(yFrac * f * 2.15 + phase * 1.35))
   )
@@ -95,7 +95,7 @@ export default function ScrollRibbon() {
     >
       <svg
         ref={svgRef}
-        className="h-full w-[48%] max-lg:w-[75%]"
+        className="h-full w-full"
         viewBox={`0 0 ${size.w} ${size.h}`}
         preserveAspectRatio="none"
       >

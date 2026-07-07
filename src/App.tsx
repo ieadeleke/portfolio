@@ -12,6 +12,7 @@ import { RevealContext } from './context/reveal'
 import HomePage from './features/home/HomePage'
 import AboutPage from './features/about/AboutPage'
 import ProjectsPage from './features/projects/ProjectsPage'
+// import WritingPage from './features/writing/WritingPage' // hidden until there are more articles
 import ContactPage from './features/contact/ContactPage'
 
 function ScrollToTop() {
@@ -29,6 +30,7 @@ function AnimatedRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/projects" element={<ProjectsPage />} />
+      {/* <Route path="/writing" element={<WritingPage />} /> */}
       <Route path="/contact" element={<ContactPage />} />
     </Routes>
   )

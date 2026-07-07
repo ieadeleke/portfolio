@@ -15,7 +15,7 @@ const ease = cubicBezier(0.16, 1, 0.3, 1)
 
 // geometry — matched to HandOfGod so the revealed hands sit where these did
 const COLS = 80
-const COLOR = '#983520'
+const COLOR = '#c9542f'
 const RIPPLE_COLOR = '#ff8a52'
 const SPARK_COLOR = '#ffe4c4'
 const FLASH_CORE = '#fff6ea'

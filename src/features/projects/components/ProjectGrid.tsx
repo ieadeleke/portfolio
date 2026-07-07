@@ -100,7 +100,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
             <span className="text-[0.625rem] font-medium tracking-[0.1em] text-gray tabular-nums shrink-0">
               {String(index + 1).padStart(2, '0')}
             </span>
-            <h3 className="text-[clamp(1.25rem,2.2vw,2rem)] font-extrabold tracking-[-0.03em] leading-none uppercase text-black transition-colors duration-300 group-hover:text-gray-dark">
+            <h3 className="text-[clamp(1.25rem,2.2vw,2rem)] font-extrabold tracking-[-0.01em] leading-none text-black transition-colors duration-300 group-hover:text-gray-dark">
               {project.title}
             </h3>
           </div>

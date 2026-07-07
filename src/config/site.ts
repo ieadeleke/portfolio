@@ -4,10 +4,13 @@ export const site = {
   titleTemplate: '%s — Ifeoluwase',
   description:
     'Ifeoluwase is a design-forward fullstack developer building polished, performant web and mobile experiences.',
+  url: 'https://ifeoluwase.dev',
   resumeUrl: '/adeleke_ifeoluwase.pdf',
   contact: {
-    email: 'eadeleke@gmail.com',
+    email: 'eadelekeife@gmail.com',
     phone: '+2348132277316',
+    phoneDisplay: '+234 813 227 7316',
+    whatsapp: 'https://wa.me/2348132277316',
     location: 'Lagos, Nigeria',
   },
   social: {

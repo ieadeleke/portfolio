@@ -111,7 +111,7 @@ function ServiceRow({
                   <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
                   <div className="flex-1 mx-2 bg-[#2a2a2a] rounded px-2 py-0.5">
                     <p className="text-[0.5rem] text-white/30 tracking-wide truncate">
-                      ife.dev/{service.title.toLowerCase().replace(/\s+&?\s*/g, "-")}
+                      ifeoluwase.dev/{service.title.toLowerCase().replace(/\s+&?\s*/g, "-")}
                     </p>
                   </div>
                 </div>

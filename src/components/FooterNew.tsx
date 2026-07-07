@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { motion, cubicBezier } from "framer-motion";
 import { FiMessageCircle } from "react-icons/fi";
-import footerPattern from "../assets/footer-pattern.svg";
+import { site } from "../config/site";
+// import footerPattern from "../assets/footer-pattern.svg";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);
 
 export default function FooterNew() {
-  const email = "hello@ifeoluwase.dev";
+  const email = site.contact.email;
 
   return (
     <footer className="bg-black">
@@ -26,18 +27,20 @@ export default function FooterNew() {
                 Let's hop on a call.
               </h2>
               <div className="flex items-center gap-6 mt-[clamp(20px,3vw,28px)] flex-wrap">
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center justify-center rounded-full bg-off-white text-black px-[22px] py-[14px] text-[0.95rem] font-semibold hover:bg-white transition-colors"
-                  aria-label="Start your project"
-                >
-                  Start your project
-                </Link>
                 <a
                   href={`mailto:${email}`}
+                  className="inline-flex items-center justify-center rounded-full bg-off-white text-black px-[22px] py-[14px] text-[0.95rem] font-semibold hover:bg-white transition-colors"
+                  aria-label="Start your project — send an email"
+                >
+                  Start your project
+                </a>
+                <a
+                  href={site.contact.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-[clamp(0.95rem,1.2vw,1.1rem)] text-[#aaa] hover:text-off-white transition-colors"
                 >
-                  {email}
+                  {site.contact.phoneDisplay}
                 </a>
               </div>
 
@@ -70,11 +73,11 @@ export default function FooterNew() {
               </div> */}
             </motion.div>
           </div>
-          <div className="relative h-32 md:h-unset">
+          <div className="relative h-32 md:h-auto flex items-end justify-end">
             <a
-              href={`/contact`}
-              aria-label="Available for work — get in touch"
-              className="absolute bottom-6 right-6 w-[108px] h-[108px] rounded-full grid place-items-center"
+              href={`mailto:${email}`}
+              aria-label="Available for work — send an email"
+              className="relative w-[108px] h-[108px] rounded-full grid place-items-center"
             >
               <motion.svg
                 viewBox="0 0 100 100"
@@ -110,14 +113,14 @@ export default function FooterNew() {
       </div>
 
       {/* African pattern accent band */}
-      <div className="relative overflow-hidden border-t border-[#1a1a1a]">
+      {/* <div className="relative overflow-hidden border-t border-[#1a1a1a]">
         <img
           src={footerPattern}
           alt=""
           aria-hidden="true"
           className="block w-full h-auto select-none"
         />
-      </div>
+      </div> */}
     </footer>
   );
 }
