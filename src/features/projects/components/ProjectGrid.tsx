@@ -5,10 +5,14 @@ import ExpandLine from '../../../components/ExpandLine'
 const ease = cubicBezier(0.16, 1, 0.3, 1)
 
 const projects = [
-  { title: 'Kariiya', category: 'Career Platform', stack: 'Next.js | Express | Python | MongoDB', year: '2024', imgClass: 'project-img-1' },
-  { title: 'Gaaga', category: 'Entertainment', stack: 'React | Tailwind | Framer Motion', year: '2024', imgClass: 'project-img-2' },
-  { title: 'Madam Shikini', category: 'AI Chatbot', stack: 'Next.js | Express | Postgres', year: '2023', imgClass: 'project-img-3' },
-  { title: 'UsePay4it', category: 'Fintech', stack: 'Next.js | Express | Postgres', year: '2023', imgClass: 'project-img-4' },
+  { title: 'Kariiya', category: 'Career Platform', stack: 'Next.js | Express | Python | MongoDB', year: '2025', imgClass: 'project-img-1' },
+  { title: 'Gaaga', category: 'Entertainment', stack: 'React | Tailwind | Framer Motion', year: '2026', imgClass: 'project-img-2' },
+  { title: 'Madam Shikini', category: 'AI Chatbot', stack: 'Next.js | Express | Postgres', year: '2024', imgClass: 'project-img-3' },
+  { title: 'UsePay4it', category: 'Fintech', stack: 'Next.js | Express | Postgres', year: '2024', imgClass: 'project-img-4' },
+  { title: 'Bizvantage', category: 'Business', stack: 'Next.js | Express | Postgres', year: '2026', imgClass: 'project-img-5' },
+  { title: 'FFWNM', category: 'Entertainment', stack: 'Next.js | Tailwind', year: '2024', imgClass: 'project-img-6' },
+  { title: 'ARM Fitness', category: 'Fitness', stack: 'Next.js | Tailwind', year: '2024', imgClass: 'project-img-7' },
+  { title: 'Plangenie', category: 'Business', stack: 'Next.js | Express | MongoDB', year: '2026', imgClass: 'project-img-8' },
 ]
 
 function ProjectCard({ project, index }: { project: typeof projects[0]; index: number }) {
@@ -102,7 +106,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
             {project.year}
           </span>
         </div>
-        <div className="flex items-center gap-3 mt-2.5 ml-[calc(clamp(8px,1vw,14px)+1.1em)]">
+        <div className="flex flex-col md:flex-row md:items-center gap-0 md:gap-3 mt-2.5 ml-[calc(clamp(8px,1vw,14px)+1.1em)]">
           <span className="text-[0.75rem] font-medium tracking-[0.08em] uppercase text-gray">
             {project.category}
           </span>
@@ -134,7 +138,7 @@ export default function ProjectGrid() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 gap-x-[clamp(16px,2.5vw,32px)] gap-y-[clamp(32px,5vw,64px)] max-lg:grid-cols-1 max-lg:gap-y-[clamp(40px,6vw,56px)]">
+        <div className="grid grid-cols-2 gap-x-[clamp(16px,1.5vw,32px)] gap-y-[clamp(32px,1.5vw,64px)] max-lg:grid-cols-1 max-lg:gap-y-[clamp(40px,1vw,56px)]">
           {projects.map((project, i) => (
             <ProjectCard key={project.title} project={project} index={i} />
           ))}

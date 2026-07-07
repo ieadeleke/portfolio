@@ -11,7 +11,7 @@ function ArticleRow({ article, index }: { article: Article; index: number }) {
       href={article.url}
       target={article.url.startsWith('http') ? '_blank' : undefined}
       rel={article.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-      className="group flex items-baseline gap-[clamp(16px,2vw,32px)] border-b border-[#1a1a1a] py-[clamp(20px,2.5vw,32px)]"
+      className="group flex flex-col md:flex-row items-baseline gap-[clamp(16px,2vw,32px)] border-b border-[#1a1a1a] py-[clamp(20px,2.5vw,32px)]"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
@@ -48,7 +48,7 @@ function ArticleRow({ article, index }: { article: Article; index: number }) {
 
 export default function Writing() {
   return (
-    <section className="bg-black pb-[clamp(60px,8vw,120px)] px-[clamp(24px,5vw,80px)]">
+    <section className="bg-black pb-[clamp(60px,8vw,120px)] px-[clamp(24px,5vw,80px)] mt-10">
       <div className="max-w-[1400px] mx-auto">
         <motion.div
           className="flex items-end justify-between mb-[clamp(1rem,2vw,2rem)]"

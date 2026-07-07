@@ -15,7 +15,7 @@ const tagLabels = [
 export default function Hero() {
   return (
     <section>
-      <div className="relative w-full min-h-[25rem] md:min-h-[40rem] bg-black flex flex-col justify-center items-center overflow-hidden">
+      <div className="relative w-full min-h-[30rem] md:min-h-[40rem] bg-black flex flex-col justify-center items-center overflow-hidden">
         {/* Faint ASCII backdrop — same scattered glyph field as About */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.28]">
           <AsciiImage src={mePortrait} invert={false} cols={150} className="block w-full" />

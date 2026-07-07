@@ -250,6 +250,44 @@
     background-size: 24px 24px, 100% 100%;
   }
 
+    /* 5 — Gridlock: dot grid + cool gradient */
+  .project-img-5::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      url('./assets/biz.png') center / cover no-repeat,
+      linear-gradient(145deg, #1a150a 0%, #2e2510 50%, #3a2f14 100%);
+  }
+
+     /* 5 — Gridlock: dot grid + cool gradient */
+  .project-img-6::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      url('./assets/ffwnm.png') center / cover no-repeat,
+      linear-gradient(145deg, #1a150a 0%, #2e2510 50%, #3a2f14 100%);
+  }
+
+    /* 5 — Gridlock: dot grid + cool gradient */
+  .project-img-7::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      url('./assets/fitness.png') center / cover no-repeat,
+      linear-gradient(145deg, #1a150a 0%, #2e2510 50%, #3a2f14 100%);
+  }
+  .project-img-8::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      url('./assets/plangenie.png') center / cover no-repeat,
+      linear-gradient(145deg, #1a150a 0%, #2e2510 50%, #3a2f14 100%);
+  }
+
   /* Values image — radial gradient + grain */
   .values-image-bg::before {
     content: '';
