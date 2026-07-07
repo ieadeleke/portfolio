@@ -268,7 +268,7 @@ export default function ContactForm() {
                   {
                     icon: FiTwitter,
                     label: "Twitter",
-                    href: site.social.twitter || site.social.x || "#",
+                    href: site.social.x || "#",
                   },
                   {
                     icon: FiLinkedin,
