@@ -89,7 +89,7 @@ const Process = () => {
             return (
               <motion.div
                 key={c.name}
-                className={`tile group relative min-h-[clamp(200px,22vw,400px)] border border-[#1a1a1a] overflow-hidden rounded-sm flex items-center justify-center ${c.pattern}`}
+                className={`tile group relative min-h-[17rem] border border-[#1a1a1a] overflow-hidden rounded-sm flex items-center justify-center ${c.pattern}`}
                 data-expanded={isExpanded}
                 onMouseEnter={() => setHovered(i)}
                 onMouseLeave={() => setHovered((curr) => (curr === i ? null : curr))}

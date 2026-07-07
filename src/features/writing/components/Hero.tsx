@@ -62,7 +62,7 @@ export default function Hero() {
           <span key={label} className={`block overflow-hidden ${i >= 2 ? 'max-sm:hidden' : ''}`}>
             <motion.span
               className={`block text-[0.6875rem] font-medium tracking-[0.1em] uppercase text-[#555] py-5 px-12 max-lg:py-4 max-lg:px-6 max-sm:py-3.5 max-sm:px-4 max-sm:text-[0.5625rem] ${
-                i === 1 ? "text-center max-lg:text-left" : ""
+                i === 1 ? "text-center max-lg:text-left max-sm:text-right" : ""
               } ${i === 2 ? "text-right max-lg:text-left" : ""}`}
               initial={{ y: "100%" }}
               animate={{ y: "0%" }}

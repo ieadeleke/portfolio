@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Lenis from 'lenis'
 import Nav from './components/Nav'
@@ -32,6 +32,7 @@ function AnimatedRoutes() {
       <Route path="/projects" element={<ProjectsPage />} />
       {/* <Route path="/writing" element={<WritingPage />} /> */}
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

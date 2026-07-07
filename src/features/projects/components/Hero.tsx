@@ -22,7 +22,7 @@ export default function Hero() {
 
   return (
     <section ref={heroRef}>
-      <div className="relative w-full min-h-[40rem] bg-black flex flex-col justify-center items-center overflow-hidden">
+      <div className="relative w-full min-h-[25rem] md:min-h-[40rem] bg-black flex flex-col justify-center items-center overflow-hidden">
         {/* Faint ASCII backdrop — same scattered glyph field as About */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.28]">
           <AsciiImage src={mePortrait} invert={false} cols={150} className="block w-full" />
@@ -79,7 +79,7 @@ export default function Hero() {
           <span key={label} className={`block overflow-hidden ${i >= 2 ? 'max-sm:hidden' : ''}`}>
             <motion.span
               className={`block text-[0.6875rem] font-medium tracking-[0.1em] uppercase text-[#555] py-5 px-12 max-lg:py-4 max-lg:px-6 max-sm:py-3.5 max-sm:px-4 max-sm:text-[0.5625rem] ${
-                i === 1 ? "text-center max-lg:text-left" : ""
+                i === 1 ? "text-center max-lg:text-left max-sm:text-right" : ""
               } ${i === 2 ? "text-right max-lg:text-left" : ""}`}
               initial={{ y: "100%" }}
               animate={{ y: "0%" }}
