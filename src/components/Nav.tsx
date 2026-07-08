@@ -60,12 +60,12 @@ export default function Nav() {
           aria-label={open ? 'Close menu' : 'Open menu'}
         >
           <motion.span
-            className="block h-[2px] bg-off-white origin-center"
+            className="block w-full h-[2px] bg-off-white origin-center"
             animate={open ? { rotate: 45, y: 4 } : { rotate: 0, y: 0 }}
             transition={{ duration: 0.4, ease }}
           />
           <motion.span
-            className="block h-[2px] bg-off-white origin-center"
+            className="block w-full h-[2px] bg-off-white origin-center"
             animate={open ? { rotate: -45, y: -4 } : { rotate: 0, y: 0 }}
             transition={{ duration: 0.4, ease }}
           />
