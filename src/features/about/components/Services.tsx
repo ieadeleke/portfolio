@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform, cubicBezier } from 'framer-motion'
 import ExpandLine from '../../../components/ExpandLine'
-import ifeImg from '../../../assets/ife.png'
-import ifeColorImg from '../../../assets/ife.jpeg'
+import ifeImg from '../../../assets/ife.webp'
+import ifeColorImg from '../../../assets/ife-color.webp'
 import { ImageSpotlight } from './ImageSpotlight'
 
 const ease = cubicBezier(0.16, 1, 0.3, 1)

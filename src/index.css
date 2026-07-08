@@ -205,7 +205,7 @@
     position: absolute;
     inset: 0;
     background:
-      url('./assets/kariiya_2.png') center / cover no-repeat,
+      url('./assets/kariiya_2.webp') center / cover no-repeat,
       linear-gradient(145deg, #0a0f1a 0%, #16213e 50%, #0f3460 100%);
   }
 
@@ -215,7 +215,7 @@
     position: absolute;
     inset: 0;
     background:
-      url('./assets/gaaga-1.png') center / cover no-repeat,
+      url('./assets/gaaga-1.webp') center / cover no-repeat,
       linear-gradient(145deg, #1a0a14 0%, #2d1b2e 50%, #3d1f3e 100%);
   }
 
@@ -225,7 +225,7 @@
     position: absolute;
     inset: 0;
     background:
-      url('./assets/madam.png') center / cover no-repeat,
+      url('./assets/madam.webp') center / cover no-repeat,
       linear-gradient(145deg, #0a1a10 0%, #14352a 50%, #0f2e20 100%);
   }
 
@@ -235,7 +235,7 @@
     position: absolute;
     inset: 0;
     background:
-      url('./assets/usepay4it.png') center / cover no-repeat,
+      url('./assets/usepay4it.webp') center / cover no-repeat,
       linear-gradient(145deg, #1a150a 0%, #2e2510 50%, #3a2f14 100%);
   }
 

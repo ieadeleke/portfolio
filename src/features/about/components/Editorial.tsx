@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, cubicBezier } from "framer-motion";
 import ExpandLine from "../../../components/ExpandLine";
 import RevealWords from "../../../components/RevealWords";
 import { ImageSpotlight } from "./ImageSpotlight";
-import ifeImg from "../../../assets/me.png";
+import ifeImg from "../../../assets/me.webp";
 import { Link } from "react-router-dom";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);

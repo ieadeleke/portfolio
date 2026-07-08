@@ -1,13 +1,13 @@
 import { motion, cubicBezier } from 'framer-motion'
 import ExpandLine from '../../../components/ExpandLine'
-import creditProLogo from '../../../assets/companies/creditpro.png'
+import creditProLogo from '../../../assets/companies/creditpro.webp'
 import planGenieLogo from '../../../assets/companies/plangenie.svg'
-import lasgLogo from '../../../assets/companies/lasg-mono.png'
+import lasgLogo from '../../../assets/companies/lasg-mono.webp'
 import pay4itLogo from '../../../assets/companies/pay4it.svg'
 import gaagaLogo from '../../../assets/companies/gaaga.svg'
-import vo3Logo from '../../../assets/companies/vo.png'
-import ladoxLogo from '../../../assets/companies/ladox-mono.png'
-import findworkaLogo from '../../../assets/companies/findworka-mono.png'
+import vo3Logo from '../../../assets/companies/vo.webp'
+import ladoxLogo from '../../../assets/companies/ladox-mono.webp'
+import findworkaLogo from '../../../assets/companies/findworka-mono.webp'
 
 const ease = cubicBezier(0.16, 1, 0.3, 1)
 

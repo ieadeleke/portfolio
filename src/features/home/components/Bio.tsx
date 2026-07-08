@@ -3,7 +3,7 @@ import { motion, cubicBezier } from "framer-motion";
 import ExpandLine from "../../../components/ExpandLine";
 import RevealWords from "../../../components/RevealWords";
 import { site } from "../../../config/site";
-import meImg from "../../../assets/me.png";
+import meImg from "../../../assets/me.webp";
 import { FiDownload, FiArrowUpRight } from "react-icons/fi";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);

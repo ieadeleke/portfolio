@@ -1,7 +1,7 @@
 import { motion, cubicBezier } from "framer-motion";
 import { site } from "../../../config/site";
 import AsciiImage from "../../../components/AsciiImage";
-import mePortrait from "../../../assets/me.png";
+import mePortrait from "../../../assets/me.webp";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);
 

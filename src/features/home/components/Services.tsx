@@ -7,10 +7,10 @@ import {
   cubicBezier,
 } from "framer-motion";
 import ExpandLine from "../../../components/ExpandLine";
-import feImg from "../../../assets/fe.png";
-import beImg from "../../../assets/be.png";
-import articleImg from "../../../assets/article.png";
-import teachImg from "../../../assets/teach.jpeg";
+import feImg from "../../../assets/fe.webp";
+import beImg from "../../../assets/be.webp";
+import articleImg from "../../../assets/article.webp";
+import teachImg from "../../../assets/teach.webp";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);
 
