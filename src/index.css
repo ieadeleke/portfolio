@@ -402,12 +402,18 @@
 
 .tile:hover .shape,
 .tile[data-expanded='true'] .shape{
-  clip-path:none;
   width:100%;
   height:100%;
-  transform: rotate(-1.2deg);
+  transform: rotate(0deg);
   box-shadow: inset 0 10px 26px rgba(0,0,0,0.12), inset 0 -10px 22px rgba(0,0,0,0.10);
 }
+
+/* Full-bleed clip targets with vertex counts matched to each resting silhouette,
+   so the shape morphs smoothly to the tile instead of snapping. */
+.tile:hover .shape-1,.tile[data-expanded='true'] .shape-1{clip-path:polygon(0% 0%,100% 0%,100% 0%,100% 100%,0% 100%,0% 100%,0% 0%)}
+.tile:hover .shape-2,.tile[data-expanded='true'] .shape-2{clip-path:polygon(0% 0%,100% 0%,100% 0%,100% 100%,100% 100%,0% 100%,0% 100%,0% 0%)}
+.tile:hover .shape-3,.tile[data-expanded='true'] .shape-3{clip-path:polygon(0% 0%,100% 0%,100% 0%,100% 100%,100% 100%,0% 100%,0% 100%,0% 0%)}
+.tile:hover .shape-4,.tile[data-expanded='true'] .shape-4{clip-path:polygon(0% 0%,100% 0%,100% 0%,100% 100%,100% 100%,50% 100%,0% 100%,0% 100%,0% 0%)}
 
 .shape-title{font-family:var(--font-heading);font-weight:900;letter-spacing:-0.02em;text-transform:uppercase;overflow-wrap:break-word;hyphens:auto}
 
@@ -424,8 +430,8 @@
 
 .shape {
   position: relative;
-  width: 420px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   padding: 48px 20px;
   display: flex;
   align-items: center;
@@ -441,55 +447,57 @@
       5% 26%);
 }
 
+/* Resting silhouettes, rescaled into the now full-size element so the shape
+   fills the tile (full-width content) while the blob keeps its prior look. */
 .shape-1 {
   clip-path: polygon(
-    12% 6%,
-    84% 12%,
-    96% 20%,
-    92% 90%,
-    18% 94%,
-    5% 78%,
-    7% 28%
+    17.3% 22.7%,
+    79.2% 26.4%,
+    89.6% 31.4%,
+    86.1% 74.8%,
+    22.5% 77.3%,
+    11.3% 67.4%,
+    13% 36.4%
   );
 }
 
 .shape-2 {
   clip-path: polygon(
-    14% 10%,
-    86% 10%,
-    98% 24%,
-    95% 82%,
-    73% 90%,
-    12% 88%,
-    4% 68%,
-    5% 24%
+    19% 25.2%,
+    81% 25.2%,
+    91.3% 33.9%,
+    88.7% 69.8%,
+    69.8% 74.8%,
+    17.3% 73.6%,
+    10.4% 61.2%,
+    11.3% 33.9%
   );
 }
 
 .shape-3 {
   clip-path: polygon(
-    9% 14%,
-    76% 14%,
-    94% 28%,
-    94% 84%,
-    84% 92%,
-    10% 92%,
-    3% 78%,
-    3% 26%
+    14.7% 27.7%,
+    72.4% 27.7%,
+    87.8% 36.4%,
+    87.8% 71.1%,
+    79.2% 76%,
+    15.6% 76%,
+    9.6% 67.4%,
+    9.6% 35.1%
   );
 }
 
 .shape-4 {
   clip-path: polygon(
-    18% 12%,
-    72% 8%,
-    96% 22%,
-    92% 74%,
-    78% 92%,
-    48% 84%,
-    24% 92%,
-    6% 76%,
-    7% 28%
+    22.5% 26.4%,
+    68.9% 24%,
+    89.6% 32.6%,
+    86.1% 64.9%,
+    74.1% 76%,
+    48.3% 71.1%,
+    27.6% 76%,
+    12.2% 66.1%,
+    13% 36.4%
   );
 }
 
@@ -517,6 +525,8 @@
   inset: -6px;
   border: 1.5px solid rgba(255, 255, 255, 0.08);
   pointer-events: none;
+  transition: clip-path 600ms cubic-bezier(0.16,1,0.3,1),
+              border-color 600ms cubic-bezier(0.16,1,0.3,1);
 }
 
 .shape::after {
@@ -533,10 +543,16 @@
 .tile[data-expanded='true'] .shape::before { border-color: rgba(255, 255, 255, 0.16); }
 
 /* apply clip-path to outlines too */
-.shape-1::before { clip-path: polygon(6% 18%,26% 6%,72% 6%,90% 22%,92% 58%,88% 80%,60% 86%,18% 90%,8% 70%,8% 36%); }
-.shape-2::before { clip-path: polygon(16% 18%,64% 12%,84% 12%,94% 26%,90% 70%,18% 82%,12% 62%,12% 32%); }
-.shape-3::before { clip-path: polygon(18% 18%,70% 10%,86% 22%,90% 40%,88% 66%,76% 84%,48% 88%,26% 86%,12% 72%,10% 44%); }
-.shape-4::before { clip-path: polygon(22% 24%,40% 16%,50% 28%,60% 16%,78% 24%,90% 44%,86% 66%,72% 80%,60% 72%,50% 86%,40% 72%,28% 80%,14% 66%,12% 44%); }
+.shape-1::before { clip-path: polygon(12.2% 30.2%,29.4% 22.7%,68.9% 22.7%,84.4% 32.6%,86.1% 55%,82.7% 68.6%,58.6% 72.3%,22.5% 74.8%,13.9% 62.4%,13.9% 41.3%); }
+.shape-2::before { clip-path: polygon(20.8% 30.2%,62% 26.4%,79.2% 26.4%,87.8% 35.1%,84.4% 62.4%,22.5% 69.8%,17.3% 57.4%,17.3% 38.8%); }
+.shape-3::before { clip-path: polygon(22.5% 30.2%,67.2% 25.2%,81% 32.6%,84.4% 43.8%,82.7% 59.9%,72.4% 71.1%,48.3% 73.6%,29.4% 72.3%,17.3% 63.6%,15.6% 46.3%); }
+.shape-4::before { clip-path: polygon(25.9% 33.9%,41.4% 28.9%,50% 36.4%,58.6% 28.9%,74.1% 33.9%,84.4% 46.3%,81% 59.9%,68.9% 63.6%,58.6% 63.6%,50% 72.3%,41.4% 63.6%,31.1% 68.6%,19% 59.9%,17.3% 46.3%); }
+
+/* outline follows the shape to full-bleed on hover (matched vertex counts) */
+.tile:hover .shape-1::before,.tile[data-expanded='true'] .shape-1::before{clip-path:polygon(0% 0%,30% 0%,72% 0%,100% 0%,100% 60%,100% 100%,60% 100%,0% 100%,0% 70%,0% 30%)}
+.tile:hover .shape-2::before,.tile[data-expanded='true'] .shape-2::before{clip-path:polygon(0% 0%,64% 0%,100% 0%,100% 30%,100% 100%,18% 100%,0% 100%,0% 30%)}
+.tile:hover .shape-3::before,.tile[data-expanded='true'] .shape-3::before{clip-path:polygon(0% 0%,70% 0%,100% 0%,100% 40%,100% 100%,76% 100%,48% 100%,26% 100%,0% 100%,0% 40%)}
+.tile:hover .shape-4::before,.tile[data-expanded='true'] .shape-4::before{clip-path:polygon(0% 0%,40% 0%,50% 0%,60% 0%,100% 0%,100% 30%,100% 70%,100% 100%,60% 100%,50% 100%,40% 100%,0% 100%,0% 70%,0% 30%)}
 
 .shape-deco {
   position: absolute;

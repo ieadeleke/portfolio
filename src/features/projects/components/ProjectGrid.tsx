@@ -47,7 +47,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
     <motion.div
       ref={cardRef}
       style={{ y: parallaxY }}
-      className={index % 2 === 1 ? 'lg:mt-[clamp(40px,6vw,100px)]' : ''}
+      className={index % 2 === 1 ? 'lg:mt-[clamp(24px,3vw,56px)]' : ''}
     >
     <motion.a
       href="#"
@@ -138,7 +138,7 @@ export default function ProjectGrid() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 gap-x-[clamp(16px,1.5vw,32px)] gap-y-[clamp(32px,1.5vw,64px)] max-lg:grid-cols-1 max-lg:gap-y-[clamp(40px,1vw,56px)]">
+        <div className="grid grid-cols-2 gap-x-[clamp(16px,1.5vw,32px)] gap-y-[clamp(20px,2vw,36px)] max-lg:grid-cols-1 max-lg:gap-y-[clamp(24px,4vw,36px)]">
           {projects.map((project, i) => (
             <ProjectCard key={project.title} project={project} index={i} />
           ))}

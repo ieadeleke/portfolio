@@ -107,6 +107,7 @@ const Process = () => {
                   <span aria-hidden className="shape-deco">✦</span>
                   <motion.div
                     className="flex flex-col items-center text-center gap-2"
+                    style={{ width: '100%' }}
                     layout
                     transition={{ layout: { type: 'spring', stiffness: 280, damping: 28 } }}
                   >
