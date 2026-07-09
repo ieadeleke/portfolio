@@ -17,7 +17,9 @@ import rightArt from './hand-right.txt?raw'
  */
 
 const COLS = 80
-const COLOR = '#c9542f'
+const COLOR_DESKTOP = '#c9542f'
+const COLOR_MOBILE = '#ff7a45' // brighter on phones/tablets so the art survives outdoor sunlight
+const MOBILE_MAX = 1024 // at/below this viewport width, use the brighter glyph color
 const RIPPLE_COLOR = '#ff8a52'
 const SPARK_COLOR = '#ffe4c4'
 const EMBER_COLOR = '#c86a44'
@@ -68,6 +70,7 @@ export default function HandOfGod() {
     let W = 0
     let H = 0
     let stacked = false
+    let color = COLOR_DESKTOP
     let left: Hand | null = null
     let right: Hand | null = null
     let glyphsL: Glyph[] = []
@@ -107,7 +110,7 @@ export default function HandOfGod() {
       c.font = `${(cell * GLYPH_RATIO).toFixed(2)}px "Courier New", monospace`
       c.textAlign = 'center'
       c.textBaseline = 'middle'
-      c.fillStyle = COLOR
+      c.fillStyle = color
       for (let r = 0; r < rows; r++) {
         const line = lines[r]
         for (let col = 0; col < Math.min(COLS, line.length); col++) {
@@ -139,6 +142,7 @@ export default function HandOfGod() {
 
     function build() {
       const rect = wrap!.getBoundingClientRect()
+      color = window.innerWidth <= MOBILE_MAX ? COLOR_MOBILE : COLOR_DESKTOP
       dpr = Math.min(window.devicePixelRatio || 1, 2)
       W = rect.width
       H = rect.height
@@ -263,7 +267,7 @@ export default function HandOfGod() {
         const arr = hand ? glyphsR : glyphsL
         flickers.push({ hand, idx: (Math.random() * arr.length) | 0, until: now + 120 + Math.random() * 260, ch: randGlyph((Math.random() * 9999) | 0) })
       }
-      ctx!.fillStyle = COLOR
+      ctx!.fillStyle = color
       for (const f of flickers) {
         const arr = f.hand ? glyphsR : glyphsL
         const g = arr[f.idx]
@@ -365,7 +369,7 @@ export default function HandOfGod() {
       // --- decode-in reveal (one time) ---
       if (elapsed < INTRO_DUR) {
         const p = elapsed / INTRO_DUR
-        ctx!.fillStyle = COLOR
+        ctx!.fillStyle = color
         const decode = (arr: Glyph[], ox: number) => {
           for (let i = 0; i < arr.length; i++) {
             const g = arr[i]
@@ -398,7 +402,7 @@ export default function HandOfGod() {
         const arr = hand ? glyphsR : glyphsL
         flickers.push({ hand, idx: (Math.random() * arr.length) | 0, until: now + 120 + Math.random() * 260, ch: randGlyph((Math.random() * 9999) | 0) })
       }
-      ctx!.fillStyle = COLOR
+      ctx!.fillStyle = color
       for (const f of flickers) {
         const arr = f.hand ? glyphsR : glyphsL
         const g = arr[f.idx]
