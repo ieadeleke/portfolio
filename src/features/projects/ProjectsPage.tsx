@@ -1,6 +1,5 @@
 import Hero from './components/Hero'
 import ProjectGrid from './components/ProjectGrid'
-import CtaSection from './components/CtaSection'
 import FooterNew from '../../components/FooterNew'
 
 export default function ProjectsPage() {

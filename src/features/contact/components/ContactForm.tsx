@@ -7,13 +7,54 @@ import { site } from "../../../config/site";
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);
 
-const services = ["Website", "Mobile App", "Dashboard", "Branding", "Other"];
-const budgets = ["< $5K", "$5K — $15K", "$15K — $50K", "$50K+"];
+const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined;
 
 export default function ContactForm() {
-  const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [selectedBudget, setSelectedBudget] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (submitting) return;
+    setError(null);
+
+    if (!ACCESS_KEY) {
+      setError("The form isn't configured yet. Please email me directly.");
+      return;
+    }
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    setSubmitting(true);
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: ACCESS_KEY,
+          subject: "New portfolio inquiry",
+          from_name: "Ifeoluwase Portfolio",
+          name: data.get("name"),
+          email: data.get("email"),
+          phone: data.get("phone") || "Not provided",
+          message: data.get("message"),
+          botcheck: data.get("botcheck") ?? "",
+        }),
+      });
+      const result = await res.json();
+      if (res.ok && result.success) {
+        setSubmitted(true);
+        form.reset();
+      } else {
+        setError(result.message || "Something went wrong. Please try again or email me directly.");
+      }
+    } catch {
+      setError("Couldn't reach the server. Please check your connection or email me directly.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <section className="bg-[#DFDFDF] py-[clamp(60px,8vw,120px)] px-[clamp(24px,5vw,80px)]">
@@ -49,25 +90,37 @@ export default function ContactForm() {
               </p>
             </motion.div>
           ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setSubmitted(true);
-              }}
-              className="flex flex-col gap-10"
-            >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-10">
+              {/* Honeypot — hidden from users, catches bots */}
+              <input
+                type="checkbox"
+                name="botcheck"
+                tabIndex={-1}
+                autoComplete="off"
+                className="hidden"
+                aria-hidden="true"
+              />
               {[
                 {
                   label: "Your Name",
                   type: "text",
                   name: "name",
                   placeholder: "John Doe",
+                  required: true,
                 },
                 {
                   label: "Email Address",
                   type: "email",
                   name: "email",
                   placeholder: "john@example.com",
+                  required: true,
+                },
+                {
+                  label: "Phone (optional)",
+                  type: "tel",
+                  name: "phone",
+                  placeholder: "+234 800 000 0000",
+                  required: false,
                 },
               ].map((field, i) => (
                 <motion.div
@@ -83,82 +136,12 @@ export default function ContactForm() {
                   <input
                     type={field.type}
                     name={field.name}
-                    required
+                    required={field.required}
                     placeholder={field.placeholder}
                     className="w-full bg-transparent text-[clamp(1rem,1.5vw,1.25rem)] font-medium text-black border-b border-gray-light pb-4 outline-none transition-colors duration-300 focus:border-black placeholder:text-[#ccc]"
                   />
                 </motion.div>
               ))}
-
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.8, delay: 0.2, ease }}
-              >
-                <label className="text-[0.625rem] font-semibold tracking-[0.15em] uppercase text-gray block mb-4">
-                  What do you need?
-                </label>
-                <div className="flex flex-wrap gap-3">
-                  {services.map((service, i) => (
-                    <motion.button
-                      key={service}
-                      type="button"
-                      onClick={() => setSelectedService(service)}
-                      className={`text-[0.75rem] font-medium tracking-[0.05em] py-2.5 px-5 border transition-all duration-300 cursor-pointer ${
-                        selectedService === service
-                          ? "bg-black text-off-white border-black"
-                          : "bg-transparent text-gray-dark border-gray-light hover:border-black hover:text-black"
-                      }`}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{
-                        duration: 0.4,
-                        delay: 0.3 + i * 0.05,
-                        ease,
-                      }}
-                      whileHover={{ y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {service}
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.8, delay: 0.3, ease }}
-              >
-                <label className="text-[0.625rem] font-semibold tracking-[0.15em] uppercase text-gray block mb-4">
-                  Budget Range
-                </label>
-                <div className="flex flex-wrap gap-3">
-                  {budgets.map((budget, i) => (
-                    <motion.button
-                      key={budget}
-                      type="button"
-                      onClick={() => setSelectedBudget(budget)}
-                      className={`text-[0.75rem] font-medium tracking-[0.05em] py-2.5 px-5 border transition-all duration-300 cursor-pointer ${
-                        selectedBudget === budget
-                          ? 'bg-black text-off-white border-black'
-                          : 'bg-transparent text-gray-dark border-gray-light hover:border-black hover:text-black'
-                      }`}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.4, delay: 0.4 + i * 0.05, ease }}
-                      whileHover={{ y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {budget}
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.div> */}
 
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -172,23 +155,29 @@ export default function ContactForm() {
                 <textarea
                   name="message"
                   rows={4}
-                  required
                   placeholder="Tell me about your project, timeline, and goals..."
                   className="w-full bg-transparent text-[clamp(1rem,1.5vw,1.25rem)] font-medium text-black border-b border-gray-light pb-4 outline-none transition-colors duration-300 focus:border-black placeholder:text-[#ccc] resize-none"
                 />
               </motion.div>
 
+              {error && (
+                <p className="text-[0.8125rem] text-[#b33] -mt-4" role="alert">
+                  {error}
+                </p>
+              )}
+
               <motion.button
                 type="submit"
-                className="self-start bg-black text-off-white text-[0.75rem] font-semibold tracking-[0.15em] uppercase py-5 px-14 transition-all duration-300 hover:bg-[#222] cursor-pointer"
+                disabled={submitting}
+                className="self-start bg-black text-off-white text-[0.75rem] font-semibold tracking-[0.15em] uppercase py-5 px-14 transition-all duration-300 hover:bg-[#222] cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.5, ease }}
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
+                whileHover={submitting ? undefined : { scale: 1.03, y: -2 }}
+                whileTap={submitting ? undefined : { scale: 0.97 }}
               >
-                Send Message
+                {submitting ? "Sending…" : "Send Message"}
               </motion.button>
             </form>
           )}

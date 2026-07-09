@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform, cubicBezier } from "framer-motion";
+import { motion, cubicBezier } from "framer-motion";
 import ExpandLine from "../../../components/ExpandLine";
 import RevealWords from "../../../components/RevealWords";
 import { ImageSpotlight } from "./ImageSpotlight";
@@ -10,16 +10,6 @@ const ease = cubicBezier(0.16, 1, 0.3, 1);
 
 export default function Editorial() {
   const imageRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: imageRef,
-    offset: ["start end", "end start"],
-  });
-  const imageY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
-  const imageScale = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    [1.15, 1, 1.05],
-  );
 
   return (
     <section className="py-[clamp(60px,8vw,120px)] px-[clamp(24px,5vw,80px)] bg-[#DFDFDF]">

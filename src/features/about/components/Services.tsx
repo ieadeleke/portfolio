@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { motion, useScroll, useTransform, cubicBezier } from 'framer-motion'
 import ExpandLine from '../../../components/ExpandLine'
 import ifeImg from '../../../assets/ife.webp'

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { motion, useScroll, useTransform, cubicBezier } from 'framer-motion';
+import { motion, cubicBezier } from 'framer-motion';
 
 const ease = cubicBezier(0.16, 1, 0.3, 1);
 

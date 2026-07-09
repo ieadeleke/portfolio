@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { motion, cubicBezier } from "framer-motion";
 import { FiMessageCircle } from "react-icons/fi";
 import { site } from "../config/site";
@@ -45,19 +44,44 @@ export default function FooterNew() {
               </div>
 
               <div className="mt-[clamp(40px,6vw,64px)] flex gap-6 text-[0.75rem] text-[#777] flex-wrap">
-                <a href={site.social.x} className="hover:text-off-white transition-colors">
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={site.social.x}
+                  className="hover:text-off-white transition-colors"
+                >
                   X (Twitter)
                 </a>
-                <a href={site.social.linkedin} className="hover:text-off-white transition-colors">
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={site.social.linkedin}
+                  className="hover:text-off-white transition-colors"
+                >
                   LinkedIn
                 </a>
-                <a href={site.social.github} className="hover:text-off-white transition-colors">
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={site.social.github}
+                  className="hover:text-off-white transition-colors"
+                >
                   GitHub
                 </a>
-                <a href={site.social.medium} className="hover:text-off-white transition-colors">
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={site.social.medium}
+                  className="hover:text-off-white transition-colors"
+                >
                   Medium
                 </a>
-                <a href={site.social.codesandbox} className="hover:text-off-white transition-colors">
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={site.social.codesandbox}
+                  className="hover:text-off-white transition-colors"
+                >
                   CodeSandbox
                 </a>
               </div>

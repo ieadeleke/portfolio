@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence, cubicBezier } from "framer-motion";
 import ExpandLine from "../../../components/ExpandLine";
 
@@ -43,20 +43,6 @@ const Process = () => {
   const [expanded, setExpanded] = useState<number | null>(null)
   const [hovered, setHovered] = useState<number | null>(null)
   const titleRefs = useRef<HTMLDivElement[]>([])
-  const [titleWidths, setTitleWidths] = useState<number[]>([])
-
-  useEffect(() => {
-    const measure = () => {
-      const widths = ProcessList.map((_, idx) => {
-        const el = titleRefs.current[idx]
-        return el ? Math.ceil(el.getBoundingClientRect().width) : 0
-      })
-      setTitleWidths(widths)
-    }
-    measure()
-    window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
-  }, [])
 
   return (
     <section className="bg-black">

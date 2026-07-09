@@ -256,7 +256,7 @@
     position: absolute;
     inset: 0;
     background:
-      url('./assets/biz.png') center / cover no-repeat,
+      url('./assets/biz.webp') center / cover no-repeat,
       linear-gradient(145deg, #1a150a 0%, #2e2510 50%, #3a2f14 100%);
   }
 
@@ -266,7 +266,7 @@
     position: absolute;
     inset: 0;
     background:
-      url('./assets/ffwnm.png') center / cover no-repeat,
+      url('./assets/ffwnm.webp') center / cover no-repeat,
       linear-gradient(145deg, #1a150a 0%, #2e2510 50%, #3a2f14 100%);
   }
 
@@ -276,7 +276,7 @@
     position: absolute;
     inset: 0;
     background:
-      url('./assets/fitness.png') center / cover no-repeat,
+      url('./assets/fitness.webp') center / cover no-repeat,
       linear-gradient(145deg, #1a150a 0%, #2e2510 50%, #3a2f14 100%);
   }
   .project-img-8::before {
@@ -284,7 +284,7 @@
     position: absolute;
     inset: 0;
     background:
-      url('./assets/plangenie.png') center / cover no-repeat,
+      url('./assets/plangenie.webp') center / cover no-repeat,
       linear-gradient(145deg, #1a150a 0%, #2e2510 50%, #3a2f14 100%);
   }
 
