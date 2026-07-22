@@ -12,6 +12,15 @@ export type Article = {
 // Replace these with your real articles
 export const articles: Article[] = [
   {
+    title: 'Improve Website UX with Chrome DevTools and Core Web Vitals.',
+    topic: 'User Experience',
+    platform: 'Medium',
+    date: 'Jul 2026',
+    year: '2026',
+    readTime: '8 min read',
+    url: 'https://blog.devgenius.io/improve-website-ux-with-chrome-devtools-and-core-web-vitals-9ab9c80baae7',
+    featured: true,
+  },{
     title: 'A Beginner’s Guide into Middleware in Express.js and Node.js',
     topic: 'Backend',
     platform: 'Medium',
