@@ -121,6 +121,7 @@ function ProjectCard({
     mouseX.set(0);
     mouseY.set(0);
   };
+  
   return (
     <motion.div
       ref={cardRef}
