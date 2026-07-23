@@ -5,7 +5,7 @@ export const site = {
   description:
     'Ifeoluwase is a design-forward fullstack developer building polished, performant web and mobile experiences.',
   url: 'https://ifeoluwase.dev',
-  resumeUrl: '/adeleke-ifeoluwase-resume.pdf',
+  resumeUrl: '/adeleke-ife.pdf',
   contact: {
     email: 'eadelekeife@gmail.com',
     phone: '+2348132277316',
